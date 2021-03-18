@@ -506,7 +506,11 @@ func StartServer(portA string, passwordA string) error {
 		return tk.Errf("failed to start server: %v", "invalid password")
 	}
 
-	muxT.HandleFunc("/japi/"+passwordA, japiHandler)
+	if passwordA == "" {
+		muxT.HandleFunc("/japi", japiHandler)
+	} else {
+		muxT.HandleFunc("/japi/"+passwordA, japiHandler)
+	}
 
 	errT := http.ListenAndServe(portA, muxT)
 
