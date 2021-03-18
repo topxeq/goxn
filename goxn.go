@@ -496,7 +496,6 @@ func japiHandler(w http.ResponseWriter, req *http.Request) {
 	rs := doJapi(w, req)
 
 	w.Write([]byte(rs))
-
 }
 
 func StartServer(portA string, passwordA string) error {
