@@ -350,6 +350,7 @@ func InitVM() {
 	// })
 
 	// qlang.SetDumpCode("1")
+
 	if !initFlag {
 		importQLNonGUIPackages()
 	}
