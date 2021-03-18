@@ -352,7 +352,7 @@ func initQLVM() {
 	importQLNonGUIPackages()
 }
 
-func runScript(codeA, inputA string, argsA []string, optionsA ...string) (string, error) {
+func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string, error) {
 	if tk.IfSwitchExists(optionsA, "-verbose") {
 		tk.Pl("Starting...")
 	}
