@@ -3,6 +3,8 @@ package goxn
 import (
 	"errors"
 	"fmt"
+	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/topxeq/qlang"
@@ -129,7 +131,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "1.60a"
+var versionG = "0.9a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -398,4 +400,119 @@ func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string
 	}
 
 	return retT, nil
+}
+
+func doJapi(resA http.ResponseWriter, reqA *http.Request) string {
+	if reqA != nil {
+		reqA.ParseForm()
+	}
+
+	reqT := tk.GetFormValueWithDefaultValue(reqA, "req", "")
+
+	if resA != nil {
+		resA.Header().Set("Access-Control-Allow-Origin", "*")
+		resA.Header().Set("Access-Control-Allow-Headers", "*")
+		resA.Header().Set("Content-Type", "text/json;charset=utf-8")
+	}
+
+	resA.WriteHeader(http.StatusOK)
+
+	vo := tk.GetFormValueWithDefaultValue(reqA, "vo", "")
+
+	var paraMapT map[string]string
+	var errT error
+
+	if vo == "" {
+		paraMapT = tk.FormToMap(reqA.Form)
+	} else {
+		paraMapT, errT = tk.MSSFromJSON(vo)
+
+		if errT != nil {
+			return tk.GenerateJSONPResponse("success", "invalid vo format", reqA)
+		}
+	}
+
+	switch reqT {
+	case "debug":
+		return tk.GenerateJSONPResponse("success", fmt.Sprintf("%v", reqA), reqA)
+
+	case "requestinfo":
+		rs := tk.Spr("%#v", reqA)
+
+		return tk.GenerateJSONPResponse("success", rs, reqA)
+
+	case "test":
+
+		return tk.GenerateJSONPResponse("success", "test respone", reqA)
+
+	case "runScript":
+		scriptT := paraMapT["script"]
+		if scriptT == "" {
+			return tk.GenerateJSONPResponse("fail", fmt.Sprintf("empty script"), reqA)
+		}
+
+		retT, errT := RunScript(scriptT, paraMapT["input"], nil)
+
+		var errStrT string = ""
+
+		if errT != nil {
+			errStrT = fmt.Sprintf("%v", errT)
+		}
+
+		return tk.GenerateJSONPResponseWithMore("success", retT, reqA, "Error", errStrT)
+
+	case "runFileScript":
+		scriptT := paraMapT["script"]
+		if scriptT == "" {
+			return tk.GenerateJSONPResponse("fail", tk.Spr("empty script"), reqA)
+		}
+
+		baseDirT := paraMapT["base"]
+		if baseDirT == "" {
+			baseDirT = "."
+		}
+
+		fcT := tk.LoadStringFromFile(filepath.Join(baseDirT, scriptT))
+		if tk.IsErrStr(fcT) {
+			return tk.GenerateJSONPResponseWithMore("fail", "", reqA, "Error", tk.GetErrStr(fcT))
+		}
+
+		retT, errT := RunScript(fcT, paraMapT["input"], nil)
+
+		var errStrT string = ""
+
+		if errT != nil {
+			errStrT = fmt.Sprintf("%v", errT)
+		}
+
+		return tk.GenerateJSONPResponseWithMore("success", retT, reqA, "Error", errStrT)
+	}
+
+	return tk.GenerateJSONPResponse("fail", "unknown request", reqA)
+
+}
+
+func japiHandler(w http.ResponseWriter, req *http.Request) {
+	rs := doJapi(w, req)
+
+	w.Write([]byte(rs))
+
+}
+
+func StartServer(portA string, passwordA string) error {
+	muxT := http.NewServeMux()
+
+	if strings.ContainsAny(passwordA, " /") {
+		return tk.Errf("failed to start server: %v", "invalid password")
+	}
+
+	muxT.HandleFunc("/japi/"+passwordA, japiHandler)
+
+	errT := http.ListenAndServe(portA, muxT)
+
+	if errT != nil {
+		return tk.Errf("failed to start server: %v", errT)
+	}
+
+	return nil
 }
