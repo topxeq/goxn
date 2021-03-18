@@ -342,7 +342,7 @@ func importQLNonGUIPackages() {
 
 }
 
-func initQLVM() {
+func InitVM() {
 	// qlang.SetOnPop(func(v interface{}) {
 	// 	retG = v
 	// })
