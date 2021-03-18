@@ -133,6 +133,8 @@ var versionG = "1.60a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
+var initFlag bool = false
+
 func qlEval(strA string) string {
 	vmT := qlang.New()
 
@@ -348,8 +350,10 @@ func InitVM() {
 	// })
 
 	// qlang.SetDumpCode("1")
+	if !initFlag {
+		importQLNonGUIPackages()
+	}
 
-	importQLNonGUIPackages()
 }
 
 func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string, error) {
