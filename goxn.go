@@ -352,6 +352,7 @@ func InitVM() {
 	// qlang.SetDumpCode("1")
 
 	if !initFlag {
+		initFlag = true
 		importQLNonGUIPackages()
 	}
 
@@ -360,6 +361,11 @@ func InitVM() {
 func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string, error) {
 	if tk.IfSwitchExists(optionsA, "-verbose") {
 		tk.Pl("Starting...")
+	}
+
+	if !initFlag {
+		initFlag = true
+		importQLNonGUIPackages()
 	}
 
 	vmT := qlang.New()
