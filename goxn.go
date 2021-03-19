@@ -131,7 +131,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "0.9a"
+var versionG = "0.91a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -498,17 +498,17 @@ func japiHandler(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(rs))
 }
 
-func StartServer(portA string, passwordA string) error {
+func StartServer(portA string, codeA string) error {
 	muxT := http.NewServeMux()
 
-	if strings.ContainsAny(passwordA, " /") {
+	if strings.ContainsAny(codeA, " /") {
 		return tk.Errf("failed to start server: %v", "invalid password")
 	}
 
-	if passwordA == "" {
+	if codeA == "" {
 		muxT.HandleFunc("/japi", japiHandler)
 	} else {
-		muxT.HandleFunc("/japi/"+passwordA, japiHandler)
+		muxT.HandleFunc("/japi/"+codeA, japiHandler)
 	}
 
 	errT := http.ListenAndServe(portA, muxT)
