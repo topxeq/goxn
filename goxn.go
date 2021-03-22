@@ -131,7 +131,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "0.91a"
+var versionG = "0.92a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -375,6 +375,8 @@ func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string
 	vmT.SetVar("inputG", inputA)
 
 	vmT.SetVar("argsG", argsA)
+
+	vmT.SetVar("basePathG", tk.GetSwitch(optionsA, "-base=", ""))
 
 	retT := ""
 
