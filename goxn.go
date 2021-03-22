@@ -360,7 +360,7 @@ func InitVM() {
 
 }
 
-func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string, error) {
+func RunScript(codeA, inputA string, argsA []string, parametersA map[string]string, optionsA ...string) (string, error) {
 	if tk.IfSwitchExists(optionsA, "-verbose") {
 		tk.Pl("Starting...")
 	}
@@ -377,6 +377,8 @@ func RunScript(codeA, inputA string, argsA []string, optionsA ...string) (string
 	vmT.SetVar("argsG", argsA)
 
 	vmT.SetVar("basePathG", tk.GetSwitch(optionsA, "-base=", ""))
+
+	vmT.SetVar("paraMapG", parametersA)
 
 	retT := ""
 
@@ -453,7 +455,7 @@ func doJapi(resA http.ResponseWriter, reqA *http.Request) string {
 			return tk.GenerateJSONPResponse("fail", fmt.Sprintf("empty script"), reqA)
 		}
 
-		retT, errT := RunScript(scriptT, paraMapT["input"], nil)
+		retT, errT := RunScript(scriptT, paraMapT["input"], nil, nil)
 
 		var errStrT string = ""
 
@@ -479,7 +481,7 @@ func doJapi(resA http.ResponseWriter, reqA *http.Request) string {
 			return tk.GenerateJSONPResponseWithMore("fail", "", reqA, "Error", tk.GetErrStr(fcT))
 		}
 
-		retT, errT := RunScript(fcT, paraMapT["input"], nil)
+		retT, errT := RunScript(fcT, paraMapT["input"], nil, nil)
 
 		var errStrT string = ""
 
