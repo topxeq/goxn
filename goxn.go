@@ -114,6 +114,8 @@ import (
 
 	qlgithub_topxeq_afero "github.com/topxeq/qlang/lib/github.com/topxeq/afero"
 
+	qlgithub_domodwyer_mailyak "github.com/topxeq/qlang/lib/github.com/domodwyer/mailyak"
+
 	qlgithub_topxeq_socks "github.com/topxeq/qlang/lib/github.com/topxeq/socks"
 
 	qlgithub_topxeq_regexpx "github.com/topxeq/qlang/lib/github.com/topxeq/regexpx"
@@ -343,6 +345,8 @@ func importQLNonGUIPackages() {
 	qlang.Import("github_topxeq_socks", qlgithub_topxeq_socks.Exports)
 
 	qlang.Import("github_topxeq_regexpx", qlgithub_topxeq_regexpx.Exports)
+
+	qlang.Import("github_domodwyer_mailyak", qlgithub_domodwyer_mailyak.Exports)
 
 }
 
