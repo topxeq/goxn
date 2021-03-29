@@ -140,7 +140,7 @@ var notFoundG = interface{}(errors.New("not found"))
 var initFlag bool = false
 
 func qlEval(strA string) string {
-	vmT := qlang.New()
+	vmT := qlang.New("-noexit")
 
 	errT := vmT.SafeEval(strA)
 
@@ -374,7 +374,7 @@ func RunScript(codeA, inputA string, argsA []string, parametersA map[string]stri
 		importQLNonGUIPackages()
 	}
 
-	vmT := qlang.New()
+	vmT := qlang.New("-noexit")
 
 	vmT.SetVar("inputG", inputA)
 

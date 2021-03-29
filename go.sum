@@ -366,8 +366,6 @@ github.com/topxeq/imagetk v0.0.0-20200429113907-2f0ae06f6856/go.mod h1:5yPPipsPS
 github.com/topxeq/imagetk v0.0.0-20200429123347-cfc2b754475d/go.mod h1:5yPPipsPS5Rg8ea7bK3PhAuoQwHtXLwHEm4c+V/BWrE=
 github.com/topxeq/mahonia v0.0.0-20190828060648-12b0599ddd1a h1:AbaDA3cbBe+3qpvek2YhvE/xn+8vLOc3J+KBlR2DMII=
 github.com/topxeq/mahonia v0.0.0-20190828060648-12b0599ddd1a/go.mod h1:Y07Sl+FLd164UCoNlvVFUb0NJWtcehctV6kaNWPjLgM=
-github.com/topxeq/qlang v0.0.0-20210329012421-02b5e97cd3c1 h1:5wzOSkT0AxKPL0cvrkK77IHjthcosE/yXUdu1fCq/Jw=
-github.com/topxeq/qlang v0.0.0-20210329012421-02b5e97cd3c1/go.mod h1:iEcQJ8MzcsI7xNrb5WJTpFfUNDuyDjTrL00u/4Xf1ns=
 github.com/topxeq/regexpx v0.0.0-20200814082553-4bffc7d07029 h1:NmJisdKbTYN77elIJosh+8S0R+8gLUzsR0O1Q2k9a3A=
 github.com/topxeq/regexpx v0.0.0-20200814082553-4bffc7d07029/go.mod h1:UVq5N0KFj5HnWtb+azlgFGygxGbhpFsG44uPjPNAbUE=
 github.com/topxeq/socks v0.0.0-20200812112322-24acb126b5f3 h1:rK+vzRQ8z4If0mWMPuy25tSUdEbc5ngAbzknR+AF4j0=
@@ -376,7 +374,6 @@ github.com/topxeq/sqltk v0.0.0-20210112052931-55ad87cc9be3 h1:nppHC7yQpK1bCSJT4b
 github.com/topxeq/sqltk v0.0.0-20210112052931-55ad87cc9be3/go.mod h1:KOl6vGec44tFypvXpWi2d/V1bvnOljyiIizuwIeBWu4=
 github.com/topxeq/text v0.0.0-20210329005401-bef410a88344 h1:NVBQi6vzD+vVbNeohRvZhKlzeZa0paNUxSONs4WR8pc=
 github.com/topxeq/text v0.0.0-20210329005401-bef410a88344/go.mod h1:tYltUG1XxnVJvVhMpEV2YUzmcOU0HjYl4fK3nnNDKiM=
-github.com/topxeq/tk v0.0.0-20210318011618-0e03ab785f68 h1:K/k29K5fvW3BY5jfJbq5z2N30Ep7jV10pQw2DNQ4rTM=
 github.com/topxeq/tk v0.0.0-20210318011618-0e03ab785f68/go.mod h1:G8NQISR9u4OeaOItTPP7rmUqWHSX8VvVad/llmFuoT0=
 github.com/topxeq/uuid v0.0.0-20210318003930-0d149e412ca1 h1:IEl6WYCFNG6l+4JSvFVZ0zKXOuu6NockB/BgL6d6FcE=
 github.com/topxeq/uuid v0.0.0-20210318003930-0d149e412ca1/go.mod h1:M6+8XhQK8KhdO8FvAckQN9zCLgJU8TZTVhITlsQwkWM=
