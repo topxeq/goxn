@@ -219,6 +219,7 @@ github.com/mattn/go-runewidth v0.0.10/go.mod h1:RAqKPSqVFrSLVXbA8x7dzmKdmGzieGRC
 github.com/mattn/go-sqlite3 v2.0.3+incompatible h1:gXHsfypPkaMZrKbD5209QV9jbUTJKjyR5WD3HYQSd+U=
 github.com/mattn/go-sqlite3 v2.0.3+incompatible/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
+github.com/melbahja/goph v0.3.1/go.mod h1:iSTKQ5cr4oS0+xW+qNPySWygq8OV91/7CToImPJE1QE=
 github.com/melbahja/goph v1.2.1 h1:msPxbLxf1PnbxRQGhv9mVqm7T16tPo3wqLWah0hJhKQ=
 github.com/melbahja/goph v1.2.1/go.mod h1:y+wS4c0UtZOLSwNz6ktaGiyUeYZBeT1e8PiSz+YK77o=
 github.com/miekg/dns v1.0.14/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
@@ -278,6 +279,7 @@ github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/profile v1.2.1/go.mod h1:hJw3o1OdXxsrSjjVksARp5W95eeEaEfptyVZyv6JUPA=
 github.com/pkg/sftp v1.10.1/go.mod h1:lYOWFsE0bwd1+KfKJaKeuokY15vzFx25BLbzYYoAxZI=
+github.com/pkg/sftp v1.11.0/go.mod h1:lYOWFsE0bwd1+KfKJaKeuokY15vzFx25BLbzYYoAxZI=
 github.com/pkg/sftp v1.12.0 h1:/f3b24xrDhkhddlaobPe2JgBqfdt+gC/NYl0QY9IOuI=
 github.com/pkg/sftp v1.12.0/go.mod h1:fUqqXB5vEgVCZ131L+9say31RAri6aF6KDViawhxKK8=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
@@ -314,6 +316,7 @@ github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
 github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da/go.mod h1:gi+0XIa01GRL2eRQVjQkKGqKF3SF9vZR/HnPullcV2E=
+github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
 github.com/sciter-sdk/go-sciter v0.5.0/go.mod h1:myhbEunWE4R+6J7GxJsr4SU4q0OIMOEbWFJ2qYzIdPc=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=
 github.com/shurcooL/sanitized_anchor_name v1.0.0/go.mod h1:1NzhyTcUVG4SuEtjjoZeVRXNmyL/1OwPU0+IJeTBvfc=
@@ -362,6 +365,7 @@ github.com/topxeq/awsapi v0.0.0-20191115074250-1192cb0fdb97/go.mod h1:4OH+jvJsOm
 github.com/topxeq/blockix v0.0.0-20210301072129-59538096fd95/go.mod h1:xyAfbPzbZwTQ1XIyYCvtE0oHzU9efcOB8KqqDmMdGdY=
 github.com/topxeq/doc2vec v0.0.0-20200623133505-b167170c691e/go.mod h1:V81PuRavrZfUlLORzIAcJ5h84s52j49oYnPdQQ2d9Qw=
 github.com/topxeq/govcl v0.0.0-20200518005931-906e71e9cf1c/go.mod h1:60yulcPZ5cTwfXD22LsLDK4JgDgdSxhul//wPWibruw=
+github.com/topxeq/gox v0.0.0-20200331064850-8210ab21ae74/go.mod h1:swFd+vkW9RohRyExeYnHeS9dmLsDxJabxwFu0a411+Q=
 github.com/topxeq/imagetk v0.0.0-20200429113907-2f0ae06f6856/go.mod h1:5yPPipsPS5Rg8ea7bK3PhAuoQwHtXLwHEm4c+V/BWrE=
 github.com/topxeq/imagetk v0.0.0-20200429123347-cfc2b754475d/go.mod h1:5yPPipsPS5Rg8ea7bK3PhAuoQwHtXLwHEm4c+V/BWrE=
 github.com/topxeq/mahonia v0.0.0-20190828060648-12b0599ddd1a h1:AbaDA3cbBe+3qpvek2YhvE/xn+8vLOc3J+KBlR2DMII=
@@ -374,11 +378,10 @@ github.com/topxeq/sqltk v0.0.0-20210112052931-55ad87cc9be3 h1:nppHC7yQpK1bCSJT4b
 github.com/topxeq/sqltk v0.0.0-20210112052931-55ad87cc9be3/go.mod h1:KOl6vGec44tFypvXpWi2d/V1bvnOljyiIizuwIeBWu4=
 github.com/topxeq/text v0.0.0-20210329005401-bef410a88344 h1:NVBQi6vzD+vVbNeohRvZhKlzeZa0paNUxSONs4WR8pc=
 github.com/topxeq/text v0.0.0-20210329005401-bef410a88344/go.mod h1:tYltUG1XxnVJvVhMpEV2YUzmcOU0HjYl4fK3nnNDKiM=
+github.com/topxeq/tk v0.0.0-20210112051931-4640fa2841f4/go.mod h1:JxOz/UPMGGicnycWXCt1sanGXvbIeTtlNQi55kCFUT4=
 github.com/topxeq/tk v0.0.0-20210318011618-0e03ab785f68/go.mod h1:G8NQISR9u4OeaOItTPP7rmUqWHSX8VvVad/llmFuoT0=
 github.com/topxeq/uuid v0.0.0-20210318003930-0d149e412ca1 h1:IEl6WYCFNG6l+4JSvFVZ0zKXOuu6NockB/BgL6d6FcE=
 github.com/topxeq/uuid v0.0.0-20210318003930-0d149e412ca1/go.mod h1:M6+8XhQK8KhdO8FvAckQN9zCLgJU8TZTVhITlsQwkWM=
-github.com/topxeq/xmlx v0.2.0 h1:u3QIV7fNyGbLx3gvA0DjMj3Ss7U9Wmu4SYOuhunwCGQ=
-github.com/topxeq/xmlx v0.2.0/go.mod h1:0N0JTTPEwnsZPyJzb7wMzqwlA7Y25+ZnLuTb7xSrgVM=
 github.com/ttacon/chalk v0.0.0-20160626202418-22c06c80ed31/go.mod h1:onvgF043R+lC5RZ8IT9rBXDaEDnpnw/Cl+HFiw+v/7Q=
 github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=
 github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
@@ -412,6 +415,8 @@ golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529/go.mod h1:yigFU9vqHzYiE8U
 golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
+golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
+golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=

@@ -56,6 +56,7 @@ import (
 	qlimage_png "github.com/topxeq/qlang/lib/image/png"
 
 	qlio "github.com/topxeq/qlang/lib/io"
+	qlio_fs "github.com/topxeq/qlang/lib/io/fs"
 	qlioioutil "github.com/topxeq/qlang/lib/io/ioutil"
 
 	qllog "github.com/topxeq/qlang/lib/log"
@@ -133,7 +134,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "0.92a"
+var versionG = "0.93a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -278,6 +279,7 @@ func importQLNonGUIPackages() {
 
 	qlang.Import("io", qlio.Exports)
 	qlang.Import("io_ioutil", qlioioutil.Exports)
+	qlang.Import("io_fs", qlio_fs.Exports)
 
 	qlang.Import("log", qllog.Exports)
 

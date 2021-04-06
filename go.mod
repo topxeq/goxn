@@ -19,6 +19,10 @@ replace github.com/360EntSecGroup-Skylar/excelize v1.4.1 => github.com/360EntSec
 
 replace github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2 => github.com/360EntSecGroup-Skylar/excelize v1.4.1
 
-replace github.com/topxeq/qlang v0.0.0 => ../qlang
-
 replace github.com/topxeq/tk v0.0.0 => ../tk
+
+replace github.com/topxeq/xmlx v0.2.0 => ../xmlx
+
+replace github.com/topxeq/sqltk v0.0.0 => ../sqltk
+
+replace github.com/topxeq/qlang v0.0.0 => ../qlang
