@@ -134,7 +134,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "0.93a"
+var versionG = "0.95a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -223,6 +223,8 @@ func importQLNonGUIPackages() {
 		"base64Encode":     tk.EncodeToBase64,
 		"base64Decode":     tk.DecodeFromBase64,
 		"md5Encode":        tk.MD5Encrypt,
+		"hexEncode":        tk.StrToHex,
+		"hexDecode":        tk.HexToStr,
 		"jsonEncode":       tk.ObjectToJSON,
 		"jsonDecode":       tk.JSONToObject,
 		"simpleEncode":     tk.EncodeStringCustomEx,
