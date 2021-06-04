@@ -231,7 +231,7 @@ func importQLNonGUIPackages() {
 		"simpleEncode":         tk.EncodeStringCustomEx,
 		"simpleDecode":         tk.DecodeStringCustom,
 		"getFormValue":         tk.GetFormValueWithDefaultValue,
-		"generateJOSNResponse": tk.GenerateJSONPResponseWithMore,
+		"generateJSONResponse": tk.GenerateJSONPResponseWithMore,
 
 		"versionG": versionG,
 	}
