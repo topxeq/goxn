@@ -11,6 +11,7 @@ import (
 	"github.com/topxeq/qlang"
 	_ "github.com/topxeq/qlang/lib/builtin" // 导入 builtin 包
 	_ "github.com/topxeq/qlang/lib/chan"
+	"github.com/topxeq/sqltk"
 
 	execq "github.com/topxeq/qlang/exec"
 	"github.com/topxeq/qlang/spec"
@@ -1028,6 +1029,13 @@ func importQLNonGUIPackages() {
 		"ifFormValueExist":     tk.IfFormValueExists,
 		"formToMap":            tk.FormToMap,
 		"generateJSONResponse": tk.GenerateJSONPResponseWithMore,
+
+		// database related
+		"dbConnect":     sqltk.ConnectDBX,
+		"dbExec":        sqltk.ExecDBX,
+		"dbQuery":       sqltk.QueryDBX,
+		"dbQueryCount":  sqltk.QueryCountX,
+		"dbQueryString": sqltk.QueryStringX,
 
 		// line editor related
 		"leClear":       leClear,

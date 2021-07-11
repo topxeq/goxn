@@ -11,6 +11,7 @@ require (
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/topxeq/qlang v0.0.0
 	github.com/topxeq/tk v0.0.0
+	github.com/topxeq/sqltk v0.0.0
 )
 
 // replace github.com/topxeq/tk v0.0.0 => ../tk
