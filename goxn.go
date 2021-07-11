@@ -848,7 +848,24 @@ func isDefined(vA interface{}) bool {
 	return true
 }
 
+func strToTime(strA string, formatA ...string) interface{} {
+	formatT := tk.TimeFormat
+
+	if (formatA != nil) && (len(formatA) > 0) {
+		formatT = formatA[0]
+	}
+
+	timeT, errT := tk.StrToTimeByFormat(strA, formatT)
+
+	if errT != nil {
+		return spec.Undefined
+	}
+
+	return timeT
+}
+
 func importQLNonGUIPackages() {
+	// import native functions and global variables
 	var defaultExports = map[string]interface{}{
 		// common related
 		"pass": tk.Pass,
@@ -894,6 +911,7 @@ func importQLNonGUIPackages() {
 
 		// string related
 		"trim":             tk.Trim,
+		"strTrim":          tk.Trim,
 		"strContains":      strings.Contains,
 		"strReplace":       tk.Replace,
 		"strJoin":          strJoin,
@@ -903,6 +921,8 @@ func importQLNonGUIPackages() {
 		"splitLines":       tk.SplitLines,
 		"startsWith":       tk.StartsWith,
 		"endsWith":         tk.EndsWith,
+		"strStartsWith":    tk.StartsWith,
+		"strEndsWith":      tk.EndsWith,
 
 		// regex related
 		"regMatch":     tk.RegMatchX,
@@ -916,7 +936,9 @@ func importQLNonGUIPackages() {
 		// conversion related
 		"nilToEmpty": nilToEmpty,
 		"strToInt":   tk.StrToIntWithDefaultValue,
-		"intToStr":   intToStr,
+		"strToTime":  strToTime,
+		"timeToStr":  tk.FormatTime,
+		"intToStr":   tk.IntToStrX,
 		"floatToStr": tk.Float64ToStr,
 		"toStr":      tk.ToStr,
 		"toInt":      tk.ToInt,
@@ -929,6 +951,7 @@ func importQLNonGUIPackages() {
 		"getMapString": tk.SafelyGetStringForKeyWithDefault,
 		"getMapItem":   getMapItem,
 		"getArrayItem": getArrayItem,
+		"joinList":     tk.JoinList,
 
 		// error related
 		"isError":          tk.IsError,
@@ -998,6 +1021,7 @@ func importQLNonGUIPackages() {
 		"newSSHClient":         tk.NewSSHClient,
 		"mapToPostData":        tk.MapToPostData,
 		"getWebPage":           tk.DownloadPageUTF8,
+		"downloadFile":         tk.DownloadFile,
 		"httpRequest":          tk.RequestX,
 		"getFormValue":         tk.GetFormValueWithDefaultValue,
 		"formValueExist":       tk.IfFormValueExists,
@@ -1049,6 +1073,9 @@ func importQLNonGUIPackages() {
 		"newFuncSS":  NewFuncStringStringB,
 
 		// global variables
+		"timeFormatG":        tk.TimeFormat,
+		"timeFormatCompactG": tk.TimeFormatCompact,
+
 		// "scriptPathG": scriptPathG,
 		"versionG": versionG,
 		"leBufG":   leBufG,
