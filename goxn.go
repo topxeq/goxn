@@ -865,6 +865,44 @@ func strToTime(strA string, formatA ...string) interface{} {
 	return timeT
 }
 
+func getCfgString(fileNameA string) string {
+	basePathT, errT := tk.EnsureBasePath("gox")
+
+	if errT == nil {
+		cfgPathT := tk.JoinPath(basePathT, fileNameA)
+
+		cfgStrT := tk.Trim(tk.LoadStringFromFile(cfgPathT))
+
+		if !tk.IsErrorString(cfgStrT) {
+			return cfgStrT
+		}
+
+		return tk.ErrStrF("failed to get config string: %v", tk.GetErrorString(cfgStrT))
+
+	}
+
+	return tk.ErrStrF("failed to get config string: %v", errT)
+}
+
+func setCfgString(fileNameA string, strA string) string {
+	basePathT, errT := tk.EnsureBasePath("gox")
+
+	if errT == nil {
+		cfgPathT := tk.JoinPath(basePathT, fileNameA)
+
+		rsT := tk.SaveStringToFile(strA, cfgPathT)
+
+		if tk.IsErrorString(rsT) {
+			return tk.ErrStrF("failed to save config string: %v", tk.GetErrorString(rsT))
+		}
+
+		return ""
+
+	}
+
+	return tk.ErrStrF("failed to save config string: %v", errT)
+}
+
 func importQLNonGUIPackages() {
 	// import native functions and global variables
 	var defaultExports = map[string]interface{}{
@@ -926,6 +964,7 @@ func importQLNonGUIPackages() {
 		"toUpper":          strings.ToUpper,           // 字符串转大写
 		"strContains":      strings.Contains,          // 判断字符串中是否包含某个字串
 		"strReplace":       tk.Replace,                // 替换字符串中的字串
+		"strReplaceIn":     tk.StringReplace,          // strReplaceIn("2020-02-02 08:09:15", "-", "", ":", "", " ", "")
 		"strJoin":          strJoin,                   // 连接一个字符串数组，以指定的分隔符，例： s = strJoin(listT, "\n")
 		"strSplit":         strings.Split,             // 拆分一个字符串为数组，例： listT = strSplit(strT, "\n")
 		"splitLines":       tk.SplitLines,             // 相当于strSplit(strT, "\n")
@@ -933,7 +972,7 @@ func importQLNonGUIPackages() {
 		"strStartsWith":    tk.StartsWith,             // 等同于startsWith
 		"endsWith":         tk.EndsWith,               // 判断字符串是否以某子串结尾
 		"strEndsWith":      tk.EndsWith,               // 等同于endsWith
-		"strIn":            tk.InStrings,              // 判断字符串是否在一个字符串列表中出现，函数定义： strIn(strA string, argsA ...string) bool
+		"strIn":            tk.InStrings,              // 判断字符串是否在一个字符串列表中出现，函数定义： strIn(strA string, argsA ...string) bool，第一个可变参数如果以“-”开头，将表示参数开关，-it表示忽略大小写，并且trim再比较（strA并不trim）
 		"getNowStr":        tk.GetNowTimeStringFormal, // 获取一个表示当前时间的字符串，格式：2020-02-02 08:09:15
 		"getNowStrCompact": tk.GetNowTimeString,       // 获取一个简化的表示当前时间的字符串，格式：20200202080915
 		"genRandomStr":     tk.GenerateRandomString,   // 生成随机字符串，函数定义： (minCharA, maxCharA int, hasUpperA, hasLowerA, hasDigitA, hasSpecialCharA, hasSpaceA bool, hasInvalidChars bool) string
@@ -948,15 +987,24 @@ func importQLNonGUIPackages() {
 		"regSplit":     tk.RegSplitX,          // 根据正则表达式分割字符串（以符合条件的匹配来分割），函数定义： regSplit(strA, patternA string, nA ...int) []string
 
 		// conversion related 转换相关
-		"nilToEmpty": nilToEmpty,                  // 将nil等值都转换为空字符串
-		"intToStr":   tk.IntToStrX,                // 整数转字符串
-		"strToInt":   tk.StrToIntWithDefaultValue, // 字符串转整数
-		"floatToStr": tk.Float64ToStr,             // 浮点数转字符串
-		"timeToStr":  tk.FormatTime,               // 时间转字符串，函数定义: timeToStr(timeA time.Time, formatA ...string) string
-		"strToTime":  strToTime,                   // 字符串转时间
-		"toStr":      tk.ToStr,                    // 任意值转字符串
-		"toInt":      tk.ToInt,                    // 任意值转整数
-		"toFloat":    tk.ToFloat,                  // 任意值转浮点数
+		"nilToEmpty":  nilToEmpty,                  // 将nil等值都转换为空字符串
+		"intToStr":    tk.IntToStrX,                // 整数转字符串
+		"strToInt":    tk.StrToIntWithDefaultValue, // 字符串转整数
+		"floatToStr":  tk.Float64ToStr,             // 浮点数转字符串
+		"strToFloat":  tk.StrToFloat64,             // 字符串转浮点数，如果第二个参数（可选）存在，则默认错误时返回该值，否则错误时返回-1
+		"timeToStr":   tk.FormatTime,               // 时间转字符串，函数定义: timeToStr(timeA time.Time, formatA ...string) string
+		"strToTime":   strToTime,                   // 字符串转时间
+		"bytesToData": tk.BytesToData,              // 字节数组转任意类型变量
+		"dataToBytes": tk.DataToBytes,              // 任意类型值转字节数组
+		"toStr":       tk.ToStr,                    // 任意值转字符串
+		"toInt":       tk.ToInt,                    // 任意值转整数
+		"toFloat":     tk.ToFloat,                  // 任意值转浮点数
+
+		"hexToBytes": tk.HexToBytes, // 将16进制字符串转换为字节数组([]byte)
+		"bytesToHex": tk.BytesToHex, // 将字节数组([]byte)转换为16进制字符串
+
+		"toInterface": tk.ToInterface, // 任意值转interface{}
+		"toPointer":   tk.ToPointer,   // 任意值转相应的指针
 
 		// array/map related 数组（切片）/映射（字典）相关
 		"remove":       tk.RemoveItemsInArray,               // 从切片中删除指定的项，例： remove(aryT, 3)
@@ -969,9 +1017,10 @@ func importQLNonGUIPackages() {
 		"isError":          tk.IsError,          // 判断表达式的值是否为error类型
 		"isErrStr":         tk.IsErrStr,         // 判断字符串是否是TXERROR:开始的字符串
 		"checkError":       tk.CheckError,       // 检查变量，如果是error则立即停止脚本的执行
+		"checkErr":         tk.CheckError,       // 等同于checkError
+		"checkErrf":        tk.CheckErrf,        // 检查变量，如果是error则立即停止脚本的执行，之前可以printfln输出信息
 		"checkErrorString": tk.CheckErrorString, // 检查变量，如果是TXERROR:开始的字符串则立即停止脚本的执行
 		"checkErrStr":      tk.CheckErrStr,      // 等同于checkErrorString
-		"checkErrf":        tk.CheckErrf,        // 检查变量，如果是error则立即停止脚本的执行，之前可以printfln输出信息
 		"checkErrStrf":     tk.CheckErrStrf,     // 检查变量，如果是TXERROR:开始的字符串则立即停止脚本的执行，之前可以printfln输出信息
 		"fatalf":           tk.Fatalf,           // printfln输出信息后终止脚本的执行
 		"errStr":           tk.ErrStr,           // 生成TXERROR:开始的字符串
@@ -1014,20 +1063,22 @@ func importQLNonGUIPackages() {
 		"logPrint":   logPrint,              // 同时输出到标准输出和日志文件
 
 		// system related 系统相关
-		"getClipText":  tk.GetClipText,        // 从系统剪贴板获取文本，例： textT = getClipText()
-		"setClipText":  tk.SetClipText,        // 设定系统剪贴板中的文本，例： setClipText("测试")
-		"systemCmd":    tk.SystemCmd,          // 执行一条系统命令，例如： systemCmd("cmd", "/k", "copy a.txt b.txt")
-		"ifFileExists": tk.IfFileExists,       // 判断文件是否存在
-		"fileExists":   tk.IfFileExists,       // 等同于ifFileExists
-		"joinPath":     filepath.Join,         // 连接文件路径，等同于Go语言标准库中的path/filepath.Join
-		"getFileSize":  tk.GetFileSizeCompact, // 获取文件大小
-		"getFileList":  tk.GetFileList,        // 获取指定目录下的符合条件的所有文件，例：listT = getFileList(pathT, "-recursive", "-pattern=*", "-exclusive=*.txt", "-verbose")
-		"loadText":     tk.LoadStringFromFile, // 从文件中读取文本字符串，函数定义：func loadText(fileNameA string) string，出错时返回TXERROR:开头的字符串指明原因
-		"saveText":     tk.SaveStringToFile,   // 将字符串保存到文件，函数定义： func saveText(strA string, fileA string) string
-		"loadBytes":    tk.LoadBytesFromFileE, // 从文件中读取二进制数据，函数定义：func loadBytes(fileNameA string, numA ...int) ([]byte, error)
-		"saveBytes":    tk.SaveBytesToFile,    // 将二进制数据保存到文件，函数定义： func saveBytes(bytesA []byte, fileA string) string
-		"sleep":        tk.SleepSeconds,       // 休眠指定的秒数，例：sleep(30)
-		"sleepSeconds": tk.SleepSeconds,       // 等同于sleep
+		"getClipText":       tk.GetClipText,                 // 从系统剪贴板获取文本，例： textT = getClipText()
+		"setClipText":       tk.SetClipText,                 // 设定系统剪贴板中的文本，例： setClipText("测试")
+		"systemCmd":         tk.SystemCmd,                   // 执行一条系统命令，例如： systemCmd("cmd", "/k", "copy a.txt b.txt")
+		"openFile":          tk.RunWinFileWithSystemDefault, // 用系统默认的方式打开一个文件，例如： openFile("a.jpg")
+		"ifFileExists":      tk.IfFileExists,                // 判断文件是否存在
+		"fileExists":        tk.IfFileExists,                // 等同于ifFileExists
+		"joinPath":          filepath.Join,                  // 连接文件路径，等同于Go语言标准库中的path/filepath.Join
+		"getFileSize":       tk.GetFileSizeCompact,          // 获取文件大小
+		"getFileList":       tk.GetFileList,                 // 获取指定目录下的符合条件的所有文件，例：listT = getFileList(pathT, "-recursive", "-pattern=*", "-exclusive=*.txt", "-verbose")
+		"loadText":          tk.LoadStringFromFile,          // 从文件中读取文本字符串，函数定义：func loadText(fileNameA string) string，出错时返回TXERROR:开头的字符串指明原因
+		"saveText":          tk.SaveStringToFile,            // 将字符串保存到文件，函数定义： func saveText(strA string, fileA string) string
+		"loadBytes":         tk.LoadBytesFromFileE,          // 从文件中读取二进制数据，函数定义：func loadBytes(fileNameA string, numA ...int) ([]byte, error)
+		"saveBytes":         tk.SaveBytesToFile,             // 将二进制数据保存到文件，函数定义： func saveBytes(bytesA []byte, fileA string) string
+		"sleep":             tk.Sleep,                       // 休眠指定的秒数，例：sleep(30)，可以是小数
+		"sleepSeconds":      tk.SleepSeconds,                // 基本等同于sleep，但只能是整数秒
+		"sleepMilliSeconds": tk.SleepMilliSeconds,           // 类似于sleep，但单位是毫秒
 
 		// command-line 命令行处理相关
 		"getParameter":   tk.GetParameterByIndexWithDefaultValue, // 按顺序序号获取命令行参数，其中0代表第一个参数，也就是软件名称或者命令名称，1开始才是第一个参数，注意参数不包括开关，即类似-verbose=true这样的，函数定义：func getParameter(argsA []string, idxA int, defaultA string) string
@@ -1084,7 +1135,9 @@ func importQLNonGUIPackages() {
 		//		fatalf("查询数据库错误：%v", dbT)
 		//	}
 		// pl("在数据库中共有符合条件的%v条记录", sqlRsT)
-		"dbQueryString": sqltk.QueryStringX, // 与dbQueryCount类似，但主要支持结果只有一个字符串的查询
+		"dbQueryString":        sqltk.QueryStringX,       // 与dbQueryCount类似，但主要支持结果只有一个字符串的查询
+		"dbFormat":             sqltk.FormatSQLValue,     // 将字符串转换为可用在SQL语句中的字符串（将单引号变成双单引号）
+		"dbOneLineRecordToMap": sqltk.OneLineRecordToMap, // 将只有一行（加标题行两行）的SQL语句查询结果（[][]string格式）变为类似{"Field1": "Value1", "Field2": "Value2"}的map[string]string格式
 
 		// line editor related 内置行文本编辑器有关
 		"leClear":       leClear,       // 清空行文本编辑器缓冲区，例：leClear()
@@ -1114,20 +1167,23 @@ func importQLNonGUIPackages() {
 		// GUI related start
 		// gui related 图形界面相关
 		// "initGUI":             initGUI,             // GUI操作，一般均需调用initGUI来进行初始化，例：initGUI()
-		// "getConfirmGUI":       getConfirmGUI,       // 显示一个提示信息并让用户确认的对话框，例：getConfirmGUI("对话框标题", "信息内容")
-		// "showInfoGUI":         showInfoGUI,         // 显示一个提示信息的对话框，例：showInfoGUI("对话框标题", "信息内容")
-		// "showErrorGUI":        showErrorGUI,        // 显示一个错误或警告信息的对话框，例：showErrorGUI("对话框标题", "错误或警告内容")
-		// "selectFileToSaveGUI": selectFileToSaveGUI, // 图形化选取用于保存数据的文件，例：fileName = selectFileToSaveGUI("请选择文件……", "所有文件", "*")
-		// "selectFileGUI":       selectFileGUI,       // 图形化选取文件，例：fileName = selectFileGUI("请选择文件……", "所有文件", "*")
-		// "selectDirectoryGUI":  selectDirectoryGUI,  // 图形化选取目录，例：dirName = selectDirectoryGUI("请选择目录……")
+		// "getConfirmGUI":       getConfirmGUI,       // 显示一个提示信息并让用户确认的对话框，例：getConfirmGUI("对话框标题", "信息内容")，注意，从第二个参数开始可以类似于printf那样带格式化字符串和任意长度参数值，例如getConfirmGUI("对话框标题", "信息内容=%v", abc)
+		// "showInfoGUI":         showInfoGUI,         // 显示一个提示信息的对话框，例：showInfoGUI("对话框标题", "信息内容")，注意，从第二个参数开始可以类似于printf那样带格式化字符串和任意长度参数值，例如showInfoGUI("对话框标题", "信息内容=%v", abc)
+		// "showErrorGUI":        showErrorGUI,        // 显示一个错误或警告信息的对话框，例：showErrorGUI("对话框标题", "错误或警告内容")，注意，从第二个参数开始可以类似于printf那样带格式化字符串和任意长度参数值，例如showErrorGUI("对话框标题", "信息内容=%v", abc)
+		// "selectFileToSaveGUI": selectFileToSaveGUI, // 图形化选取用于保存数据的文件，例：fileName = selectFileToSaveGUI("-title=请选择文件……", "-filterName=所有文件", "-filter=*", "-start=.")，参数均为可选，start是默认起始目录
+		// "selectFileGUI":       selectFileGUI,       // 图形化选取文件，例：fileName = selectFileGUI("-title=请选择文件……", "-filterName=所有文件", "-filter=*", "-start=.")，参数均为可选，start是默认起始目录
+		// "selectDirectoryGUI":  selectDirectoryGUI,  // 图形化选取目录，例：dirName = selectDirectoryGUI("-title=请选择目录……", "-start=.")，参数均为可选，start是默认起始目录
 
 		// GUI related end
 
 		// misc 杂项函数
-		"newFunc":    NewFuncB,                        // 将Gox语言中的定义的函数转换为Go语言中类似 func f() 的形式
-		"newFuncIIE": NewFuncInterfaceInterfaceErrorB, // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a interface{}) (interface{}, error) 的形式
-		"newFuncSSE": NewFuncStringStringErrorB,       // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) (string, error) 的形式
-		"newFuncSS":  NewFuncStringStringB,            // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) string 的形式
+		"newFunc":       NewFuncB,                        // 将Gox语言中的定义的函数转换为Go语言中类似 func f() 的形式
+		"newFuncIIE":    NewFuncInterfaceInterfaceErrorB, // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a interface{}) (interface{}, error) 的形式
+		"newFuncSSE":    NewFuncStringStringErrorB,       // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) (string, error) 的形式
+		"newFuncSS":     NewFuncStringStringB,            // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) string 的形式
+		"newStringRing": tk.NewStringRing,                // 创建一个字符串环，大小固定，后进的会将先进的最后一个顶出来
+		"getCfgStr":     getCfgString,                    // 从根目录（Windows下为C:\，*nix下为/）的gox子目录中获取文件名为参数1的配置项字符串
+		"setCfgStr":     setCfgString,                    // 向根目录（Windows下为C:\，*nix下为/）的gox子目录中写入文件名为参数1，内容为参数2的配置项字符串，例：saveCfgStr("timeout", "30")
 
 		// global variables 全局变量
 		"timeFormatG":        tk.TimeFormat,        // 用于时间处理时的时间格式，值为"2006-01-02 15:04:05"
