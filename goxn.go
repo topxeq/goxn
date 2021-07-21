@@ -1054,7 +1054,9 @@ func importQLNonGUIPackages() {
 
 		// encrypt/decrypt related 加密/解密相关
 		"encryptStr":  tk.EncryptStringByTXDEF, // 加密字符串，第二个参数（可选）是密钥字串
+		"encryptText": tk.EncryptStringByTXDEF, // 等同于encryptStr
 		"decryptStr":  tk.DecryptStringByTXDEF, // 解密字符串，第二个参数（可选）是密钥字串
+		"decryptText": tk.DecryptStringByTXDEF, // 等同于decryptStr
 		"encryptData": tk.EncryptDataByTXDEF,   // 加密二进制数据（[]byte类型），第二个参数（可选）是密钥字串
 		"decryptData": tk.DecryptDataByTXDEF,   // 解密二进制数据（[]byte类型），第二个参数（可选）是密钥字串
 
@@ -1075,8 +1077,8 @@ func importQLNonGUIPackages() {
 		"getFileList":       tk.GetFileList,                 // 获取指定目录下的符合条件的所有文件，例：listT = getFileList(pathT, "-recursive", "-pattern=*", "-exclusive=*.txt", "-verbose")
 		"loadText":          tk.LoadStringFromFile,          // 从文件中读取文本字符串，函数定义：func loadText(fileNameA string) string，出错时返回TXERROR:开头的字符串指明原因
 		"saveText":          tk.SaveStringToFile,            // 将字符串保存到文件，函数定义： func saveText(strA string, fileA string) string
-		"loadBytes":         tk.LoadBytesFromFileE,          // 从文件中读取二进制数据，函数定义：func loadBytes(fileNameA string, numA ...int) ([]byte, error)
-		"saveBytes":         tk.SaveBytesToFile,             // 将二进制数据保存到文件，函数定义： func saveBytes(bytesA []byte, fileA string) string
+		"loadBytes":         tk.LoadBytesFromFile,           // 从文件中读取二进制数据，函数定义：func loadBytes(fileNameA string, numA ...int) interface{}，返回[]byte或error，第二个参数没有或者小于零的话表示读取所有
+		"saveBytes":         tk.SaveBytesToFileE,            // 将二进制数据保存到文件，函数定义： func saveBytes(bytesA []byte, fileA string) error
 		"sleep":             tk.Sleep,                       // 休眠指定的秒数，例：sleep(30)，可以是小数
 		"sleepSeconds":      tk.SleepSeconds,                // 基本等同于sleep，但只能是整数秒
 		"sleepMilliSeconds": tk.SleepMilliSeconds,           // 类似于sleep，但单位是毫秒
