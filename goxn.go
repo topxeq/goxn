@@ -916,14 +916,17 @@ func importQLNonGUIPackages() {
 		"eval":          qlEval,                // 运行一段Gox语言代码
 		"typeOf":        tk.TypeOfValue,        // 给出某变量的类型名
 		"typeOfReflect": tk.TypeOfValueReflect, // 给出某变量的类型名（使用了反射方式）
-		"exit":          tk.Exit,               // 立即退出脚本的执行，可以带一个整数作为参数，也可以没有
-		"setValue":      tk.SetValue,           // 用反射的方式设定一个变量的值
-		"getValue":      tk.GetValue,           // 用反射的方式获取一个变量的值
-		"setVar":        tk.SetVar,             // 设置一个全局变量，例： setVar("a", "value of a")
-		"getVar":        tk.GetVar,             // 获取一个全局变量的值，例： v = getVar("a")
-		"isNil":         tk.IsNil,              // 判断一个变量或表达式是否为nil
-		"deepClone":     tk.DeepClone,
-		"deepCopy":      tk.DeepCopyFromTo,
+		// "typeOfVar":     typeOfVar,             // 给出某变量的内部类型名，注意参数是字符串类型的变量名
+		"exit":       tk.Exit,       // 立即退出脚本的执行，可以带一个整数作为参数，也可以没有
+		"setValue":   tk.SetValue,   // 用反射的方式设定一个变量的值
+		"getValue":   tk.GetValue,   // 用反射的方式获取一个变量的值
+		"setVar":     tk.SetVar,     // 设置一个全局变量，例： setVar("a", "value of a")
+		"getVar":     tk.GetVar,     // 获取一个全局变量的值，例： v = getVar("a")
+		"isNil":      tk.IsNil,      // 判断一个变量或表达式是否为nil
+		"ifThenElse": tk.IfThenElse, // 相当于三元操作符a?b:c
+		"ifElse":     tk.IfThenElse, // 相当于ifThenElse
+		"deepClone":  tk.DeepClone,
+		"deepCopy":   tk.DeepCopyFromTo,
 		// "run":           runFile,
 		// "runCode":       runCode,
 		// "runScript":     runScript,
@@ -999,18 +1002,26 @@ func importQLNonGUIPackages() {
 		"toStr":       tk.ToStr,                    // 任意值转字符串
 		"toInt":       tk.ToInt,                    // 任意值转整数
 		"toFloat":     tk.ToFloat,                  // 任意值转浮点数
+		"toByte":      tk.ToByte,                   // 任意值转字节
 
 		"hexToBytes": tk.HexToBytes, // 将16进制字符串转换为字节数组([]byte)
 		"bytesToHex": tk.BytesToHex, // 将字节数组([]byte)转换为16进制字符串
+		"hexEncode":  tk.StrToHex,   // 16进制编码
+		"hex":        tk.StrToHex,   // 等同于hexEncode
+		"strToHex":   tk.StrToHex,   // 等同于hexEncode
+		"toHex":      tk.ToHex,      // 将任意值转换为16进制形式，注意是小写格式
+		"hexDecode":  tk.HexToStr,   // 16进制解码
+		"hexToStr":   tk.HexToStr,   // 等同于hexDecode
 
 		"toInterface": tk.ToInterface, // 任意值转interface{}
 		"toPointer":   tk.ToPointer,   // 任意值转相应的指针
+		"toVar":       tk.ToVar,       // 任意值（*interface{}）转相应的值
 
 		// array/map related 数组（切片）/映射（字典）相关
 		"remove":       tk.RemoveItemsInArray,               // 从切片中删除指定的项，例： remove(aryT, 3)
 		"getMapString": tk.SafelyGetStringForKeyWithDefault, // 从映射中获得指定的键值，避免返回nil，函数定义：func getMapString(mapA map[string]string, keyA string, defaultA ...string) string， 不指定defaultA将返回空字符串
 		"getMapItem":   getMapItem,                          // 类似于getMapString，但可以取任意类型的值
-		"getArrayItem": getArrayItem,                        // 类似于getMapItem，但是是去一个切片中指定序号的值
+		"getArrayItem": getArrayItem,                        // 类似于getMapItem，但是是取一个切片中指定序号的值
 		"joinList":     tk.JoinList,                         // 类似于strJoin，但可以连接任意类型的值
 
 		// error related 错误处理相关
@@ -1037,11 +1048,6 @@ func importQLNonGUIPackages() {
 		"base64Decode":       tk.DecodeFromBase64,     // base64解码
 		"md5Encode":          tk.MD5Encrypt,           // MD5编码
 		"md5":                tk.MD5Encrypt,           // 等同于md5Encode
-		"hexEncode":          tk.StrToHex,             // 16进制编码
-		"hex":                tk.StrToHex,             // 等同于hexEncode
-		"strToHex":           tk.StrToHex,             // 等同于hexEncode
-		"hexDecode":          tk.HexToStr,             // 16进制解码
-		"hexToStr":           tk.HexToStr,             // 等同于hexDecode
 		"jsonEncode":         tk.ObjectToJSON,         // JSON编码
 		"jsonDecode":         tk.JSONToObject,         // JSON解码
 		"toJSON":             tk.ToJSONX,              // 增强的JSON编码，建议使用，函数定义： toJSON(objA interface{}, optsA ...string) string，参数optsA可选。例：s = toJSON(textA, "-indent", "-sort")
@@ -1150,6 +1156,13 @@ func importQLNonGUIPackages() {
 		//	}
 		// pl("在数据库中共有符合条件的%v条记录", sqlRsT)
 
+		"dbQueryFloat": sqltk.QueryFloatX, // 与dbQueryCount类似，但主要进行返回一个浮点数结果的查询，例：
+		// sqlRsT = dbQueryFloat(dbT, `SELECT PRICE FROM TABLE1 WHERE ID=3`)
+		// if isError(sqlRsT) {
+		//		fatalf("查询数据库错误：%v", dbT)
+		//	}
+		// pl("查询结果为%v", sqlRsT)
+
 		"dbQueryString": sqltk.QueryStringX, // 与dbQueryCount类似，但主要支持结果只有一个字符串的查询
 
 		"dbFormat": sqltk.FormatSQLValue, // 将字符串转换为可用在SQL语句中的字符串（将单引号变成双单引号）
@@ -1207,6 +1220,10 @@ func importQLNonGUIPackages() {
 		// global variables 全局变量
 		"timeFormatG":        tk.TimeFormat,        // 用于时间处理时的时间格式，值为"2006-01-02 15:04:05"
 		"timeFormatCompactG": tk.TimeFormatCompact, // 用于时间处理时的简化时间格式，值为"20060102150405"
+
+		"getSystemEndian": tk.GetSystemEndian, // 获取系统的字节顺序，返回binary.BigEndian或binary.LittleEndian
+		// "getStack":        getStack,           // 获取堆栈
+		// "getVars":         getVars,            // 获取当前变量表
 
 		// "scriptPathG": scriptPathG, // 所执行脚本的路径
 		"versionG": versionG, // Gox/Goxc的版本号
