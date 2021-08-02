@@ -1439,6 +1439,64 @@ func RunScript(codeA, inputA string, argsA []string, parametersA map[string]stri
 	return retT, nil
 }
 
+func RunScriptOnHttp(codeA string, resA http.ResponseWriter, reqA *http.Request, inputA string, argsA []string, parametersA map[string]string, optionsA ...string) (string, error) {
+	if tk.IfSwitchExists(optionsA, "-verbose") {
+		tk.Pl("Starting...")
+	}
+
+	if !initFlag {
+		initFlag = true
+		importQLNonGUIPackages()
+	}
+
+	if tk.StartsWith(codeA, "//TXDEF#") {
+		tmps := tk.DecryptStringByTXDEF(codeA, "topxeq")
+
+		if !tk.IsErrStr(tmps) {
+			codeA = tmps
+		}
+	}
+
+	vmT := qlang.New("-noexit")
+
+	vmT.SetVar("inputG", inputA)
+
+	vmT.SetVar("argsG", argsA)
+
+	vmT.SetVar("basePathG", tk.GetSwitch(optionsA, "-base=", ""))
+
+	vmT.SetVar("paraMapG", parametersA)
+
+	vmT.SetVar("requestG", reqA)
+
+	vmT.SetVar("responseG", resA)
+
+	retT := ""
+
+	errT := vmT.SafeEval(codeA)
+
+	if errT != nil {
+		return retT, errT
+	}
+
+	rs, ok := vmT.GetVar("outG")
+
+	if ok {
+		if rs != nil {
+			strT, ok := rs.(string)
+			if ok {
+				return strT, nil
+			}
+
+			return fmt.Sprintf("%v", rs), nil
+		}
+
+		return retT, nil
+	}
+
+	return retT, nil
+}
+
 func doJapi(resA http.ResponseWriter, reqA *http.Request) string {
 	if reqA != nil {
 		reqA.ParseForm()
