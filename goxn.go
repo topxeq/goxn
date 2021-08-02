@@ -145,6 +145,8 @@ var notFoundG = interface{}(errors.New("not found"))
 
 var initFlag bool = false
 
+var scriptPathG = ""
+
 func qlEval(strA string) string {
 	vmT := qlang.New("-noexit")
 
@@ -165,26 +167,26 @@ func qlEval(strA string) string {
 
 // native functions
 
-// func printValue(nameA string) {
+func printValue(nameA string) {
+	return
+}
 
-// 	v, ok := qlVMG.GetVar(nameA)
+func defined(nameA string) bool {
+	return false
 
-// 	if !ok {
-// 		tk.Pl("no variable by the name found: %v", nameA)
-// 		return
-// 	}
+}
 
-// 	tk.Pl("%v(%T): %v", nameA, v, v)
+func getStack() string {
+	return tk.ErrStrf("not available")
+}
 
-// }
+func getVars() string {
+	return tk.ErrStrf("not available")
+}
 
-// func defined(nameA string) bool {
-
-// 	_, ok := qlVMG.GetVar(nameA)
-
-// 	return ok
-
-// }
+func typeOfVar(nameA string) string {
+	return tk.ErrStrf("not available")
+}
 
 var leBufG []string
 
@@ -909,33 +911,33 @@ func importQLNonGUIPackages() {
 		// 其中 tk.开头的函数都是github.com/topxeq/tk包中的，可以去pkg.go.dev/github.com/topxeq/tk查看函数定义
 
 		// common related 一般函数
-		// "defined":       defined,               // 查看某变量是否已经定义，注意参数是字符串类型的变量名，例： if defined("a") {...}
+		"defined":       defined,               // 查看某变量是否已经定义，注意参数是字符串类型的变量名，例： if defined("a") {...}
 		"pass":          tk.Pass,               // 没有任何操作的函数，一般用于脚本结尾避免脚本返回一个结果导致输出乱了
 		"isDefined":     isDefined,             // 判断某变量是否已经定义，与defined的区别是传递的是变量名而不是字符串方式的变量，例： if isDefined(a) {...}
 		"isValid":       isValid,               // 判断某变量是否已经定义，并且不是nil或空字符串，如果传入了第二个参数，还可以判断该变量是否类型是该类型，例： if isValid(a, "string") {...}
 		"eval":          qlEval,                // 运行一段Gox语言代码
 		"typeOf":        tk.TypeOfValue,        // 给出某变量的类型名
 		"typeOfReflect": tk.TypeOfValueReflect, // 给出某变量的类型名（使用了反射方式）
-		// "typeOfVar":     typeOfVar,             // 给出某变量的内部类型名，注意参数是字符串类型的变量名
-		"exit":       tk.Exit,       // 立即退出脚本的执行，可以带一个整数作为参数，也可以没有
-		"setValue":   tk.SetValue,   // 用反射的方式设定一个变量的值
-		"getValue":   tk.GetValue,   // 用反射的方式获取一个变量的值
-		"getPointer": tk.GetPointer, // 用反射的方式获取一个变量的指针
-		"getAddr":    tk.GetAddr,    // 用反射的方式获取一个变量的地址
-		"setVar":     tk.SetVar,     // 设置一个全局变量，例： setVar("a", "value of a")
-		"getVar":     tk.GetVar,     // 获取一个全局变量的值，例： v = getVar("a")
-		"isNil":      tk.IsNil,      // 判断一个变量或表达式是否为nil
-		"ifThenElse": tk.IfThenElse, // 相当于三元操作符a?b:c
-		"ifElse":     tk.IfThenElse, // 相当于ifThenElse
-		"deepClone":  tk.DeepClone,
-		"deepCopy":   tk.DeepCopyFromTo,
+		"typeOfVar":     typeOfVar,             // 给出某变量的内部类型名，注意参数是字符串类型的变量名
+		"exit":          tk.Exit,               // 立即退出脚本的执行，可以带一个整数作为参数，也可以没有
+		"setValue":      tk.SetValue,           // 用反射的方式设定一个变量的值
+		"getValue":      tk.GetValue,           // 用反射的方式获取一个变量的值
+		"getPointer":    tk.GetPointer,         // 用反射的方式获取一个变量的指针
+		"getAddr":       tk.GetAddr,            // 用反射的方式获取一个变量的地址
+		"setVar":        tk.SetVar,             // 设置一个全局变量，例： setVar("a", "value of a")
+		"getVar":        tk.GetVar,             // 获取一个全局变量的值，例： v = getVar("a")
+		"isNil":         tk.IsNil,              // 判断一个变量或表达式是否为nil
+		"ifThenElse":    tk.IfThenElse,         // 相当于三元操作符a?b:c
+		"ifElse":        tk.IfThenElse,         // 相当于ifThenElse
+		"deepClone":     tk.DeepClone,
+		"deepCopy":      tk.DeepCopyFromTo,
 		// "run":           runFile,
 		// "runCode":       runCode,
 		// "runScript":     runScript,
 		// "magic":         magic,
 
 		// output related 输出相关
-		// "pv":        printValue,   // 输出一个变量的值，注意参数是字符串类型的变量名，例： pv("a")
+		"pv":        printValue,   // 输出一个变量的值，注意参数是字符串类型的变量名，例： pv("a")
 		"pr":        tk.Pr,        // 等同于其他语言中的print
 		"prf":       tk.Printf,    // 等同于其他语言中的printf
 		"pln":       tk.Pln,       // 等同于其他语言中的println
@@ -965,6 +967,8 @@ func importQLNonGUIPackages() {
 		// string related 字符串相关
 		"trim":             tk.Trim,                   // 取出字符串前后的空白字符
 		"strTrim":          tk.Trim,                   // 等同于trim
+		"trimSafely":       tk.TrimSafely,             // 取出字符串前后的空白字符，非字符串则返回默认值空，可以通过第二个（可选）参数设置默认值
+		"trimx":            tk.TrimSafely,             // 等同于trimSafely
 		"toLower":          strings.ToLower,           // 字符串转小写
 		"toUpper":          strings.ToUpper,           // 字符串转大写
 		"strContains":      strings.Contains,          // 判断字符串中是否包含某个字串
@@ -1083,7 +1087,7 @@ func importQLNonGUIPackages() {
 		"fileExists":        tk.IfFileExists,                // 等同于ifFileExists
 		"joinPath":          filepath.Join,                  // 连接文件路径，等同于Go语言标准库中的path/filepath.Join
 		"getFileSize":       tk.GetFileSizeCompact,          // 获取文件大小
-		"getFileList":       tk.GetFileList,                 // 获取指定目录下的符合条件的所有文件，例：listT = getFileList(pathT, "-recursive", "-pattern=*", "-exclusive=*.txt", "-verbose")
+		"getFileList":       tk.GetFileList,                 // 获取指定目录下的符合条件的所有文件，例：listT = getFileList(pathT, "-recursive", "-pattern=*", "-exclusive=*.txt", "-withDir", "-verbose")
 		"loadText":          tk.LoadStringFromFile,          // 从文件中读取文本字符串，函数定义：func loadText(fileNameA string) string，出错时返回TXERROR:开头的字符串指明原因
 		"saveText":          tk.SaveStringToFile,            // 将字符串保存到文件，函数定义： func saveText(strA string, fileA string) string
 		"loadBytes":         tk.LoadBytesFromFile,           // 从文件中读取二进制数据，函数定义：func loadBytes(fileNameA string, numA ...int) interface{}，返回[]byte或error，第二个参数没有或者小于零的话表示读取所有
@@ -1101,6 +1105,7 @@ func importQLNonGUIPackages() {
 		"getFloatSwitch": tk.GetSwitchWithDefaultFloatValue,      // 与getSwitch类似，但获取到的是浮点数（float64）的值
 		"switchExists":   tk.IfSwitchExistsWhole,                 // 判断命令行参数中是否存在开关（完整的，），用法：flag = switchExists(args, "-restart")
 		"ifSwitchExists": tk.IfSwitchExistsWhole,                 // 等同于switchExists
+		"parseCommand":   tk.ParseCommandLine,                    // 等同于switchExists
 
 		// network related 网络相关
 		"newSSHClient": tk.NewSSHClient, // 新建一个SSH连接，以便执行各种SSH操作，例：
@@ -1242,12 +1247,12 @@ func importQLNonGUIPackages() {
 		"timeFormatCompactG": tk.TimeFormatCompact, // 用于时间处理时的简化时间格式，值为"20060102150405"
 
 		"getSystemEndian": tk.GetSystemEndian, // 获取系统的字节顺序，返回binary.BigEndian或binary.LittleEndian
-		// "getStack":        getStack,           // 获取堆栈
-		// "getVars":         getVars,            // 获取当前变量表
+		"getStack":        getStack,           // 获取堆栈
+		"getVars":         getVars,            // 获取当前变量表
 
-		// "scriptPathG": scriptPathG, // 所执行脚本的路径
-		"versionG": versionG, // Gox/Goxc的版本号
-		"leBufG":   leBufG,   // 内置行文本编辑器所用的编辑缓冲区
+		"scriptPathG": scriptPathG, // 所执行脚本的路径
+		"versionG":    versionG,    // Gox/Goxc的版本号
+		"leBufG":      leBufG,      // 内置行文本编辑器所用的编辑缓冲区
 	}
 
 	qlang.Import("", defaultExports)
