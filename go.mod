@@ -10,8 +10,9 @@ require (
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/topxeq/qlang v0.0.0
-	github.com/topxeq/tk v0.0.0
 	github.com/topxeq/sqltk v0.0.0
+	github.com/topxeq/tk v0.0.0
+	github.com/xuri/excelize/v2 v2.4.1 // indirect
 )
 
 // replace github.com/topxeq/tk v0.0.0 => ../tk
