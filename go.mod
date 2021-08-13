@@ -12,7 +12,6 @@ require (
 	github.com/topxeq/qlang v0.0.0
 	github.com/topxeq/sqltk v0.0.0
 	github.com/topxeq/tk v0.0.0
-	github.com/xuri/excelize/v2 v2.4.1 // indirect
 )
 
 // replace github.com/topxeq/tk v0.0.0 => ../tk
