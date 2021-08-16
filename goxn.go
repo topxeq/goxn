@@ -921,6 +921,124 @@ func setCfgString(fileNameA string, strA string) string {
 	return tk.ErrStrF("failed to save config string: %v", errT)
 }
 
+func runCode(codeA string, argsA ...string) interface{} {
+	if !initFlag {
+		initFlag = true
+		importQLNonGUIPackages()
+	}
+
+	vmT := qlang.New("-noexit")
+
+	// if argsA != nil && len(argsA) > 0 {
+	vmT.SetVar("argsG", argsA)
+	// } else {
+	// 	vmT.SetVar("argsG", os.Args)
+	// }
+
+	retG := notFoundG
+
+	errT := vmT.SafeEval(codeA)
+
+	if errT != nil {
+		return errT
+	}
+
+	rs, ok := vmT.GetVar("outG")
+
+	if ok {
+		if rs != nil {
+			return rs
+		}
+	}
+
+	if retG != notFoundG {
+		return retG
+	}
+
+	return retG
+}
+
+func runScript(codeA string, modeA string, argsA ...string) interface{} {
+
+	if true { //modeA == "" || modeA == "0" || modeA == "ql" {
+		vmT := qlang.New()
+
+		// if argsA != nil && len(argsA) > 0 {
+		vmT.SetVar("argsG", argsA)
+		// }
+
+		retG := notFoundG
+
+		errT := vmT.SafeEval(codeA)
+
+		if errT != nil {
+			return errT
+		}
+
+		rs, ok := vmT.GetVar("outG")
+
+		if ok {
+			if rs != nil {
+				return rs
+			}
+		}
+
+		return retG
+	} else {
+		return tk.SystemCmd("gox", append([]string{codeA}, argsA...)...)
+	}
+
+}
+
+func runFile(argsA ...string) interface{} {
+	lenT := len(argsA)
+
+	if lenT < 1 {
+		return nil
+	}
+
+	fcT := tk.LoadStringFromFile(argsA[0])
+
+	if tk.IsErrorString(fcT) {
+		return tk.Errf("Invalid file content: %v", tk.GetErrorString(fcT))
+	}
+
+	return runScript(fcT, "", argsA[1:]...)
+}
+
+func getMagic(numberA int) string {
+	if numberA < 0 {
+		return tk.GenerateErrorString("invalid magic number")
+	}
+
+	typeT := numberA % 10
+
+	var fcT string
+
+	if typeT == 8 {
+		fcT = tk.DownloadPageUTF8(tk.Spr("https://gitee.com/topxeq/gox/raw/master/magic/%v.gox", numberA), nil, "", 30)
+
+	} else if typeT == 7 {
+		fcT = tk.DownloadPageUTF8(tk.Spr("https: //raw.githubusercontent.com/topxeq/gox/master/magic/%v.gox", numberA), nil, "", 30)
+	} else {
+		return tk.GenerateErrorString("invalid magic number")
+	}
+
+	return fcT
+
+}
+
+func magic(numberA int, argsA ...string) interface{} {
+	fcT := getMagic(numberA)
+
+	if tk.IsErrorString(fcT) {
+		return tk.ErrorStringToError(fcT)
+	}
+
+	return runCode(fcT, argsA...)
+
+}
+
 func importQLNonGUIPackages() {
 	// import native functions and global variables
 	var defaultExports = map[string]interface{}{
@@ -949,10 +1067,10 @@ func importQLNonGUIPackages() {
 		"ifThen":          tk.IfThenElse,         // 相当于ifThenElse
 		"deepClone":       tk.DeepClone,
 		"deepCopy":        tk.DeepCopyFromTo,
-		// "run":             runFile,
-		// "runCode":         runCode,
-		// "runScript":       runScript,
-		// "magic":           magic,
+		"run":             runFile,
+		"runCode":         runCode,
+		"runScript":       runScript,
+		"magic":           magic,
 
 		// output related 输出相关
 		"pv":        printValue,   // 输出一个变量的值，注意参数是字符串类型的变量名，例： pv("a")
@@ -984,26 +1102,29 @@ func importQLNonGUIPackages() {
 		"bitXor": tk.BitXor, // 异或运算
 
 		// string related 字符串相关
-		"trim":             tk.Trim,                   // 取出字符串前后的空白字符
-		"strTrim":          tk.Trim,                   // 等同于trim
-		"trimSafely":       tk.TrimSafely,             // 取出字符串前后的空白字符，非字符串则返回默认值空，可以通过第二个（可选）参数设置默认值
-		"trimx":            tk.TrimSafely,             // 等同于trimSafely
-		"toLower":          strings.ToLower,           // 字符串转小写
-		"toUpper":          strings.ToUpper,           // 字符串转大写
-		"strContains":      strings.Contains,          // 判断字符串中是否包含某个字串
-		"strReplace":       tk.Replace,                // 替换字符串中的字串
-		"strReplaceIn":     tk.StringReplace,          // strReplaceIn("2020-02-02 08:09:15", "-", "", ":", "", " ", "")
-		"strJoin":          strJoin,                   // 连接一个字符串数组，以指定的分隔符，例： s = strJoin(listT, "\n")
-		"strSplit":         strings.Split,             // 拆分一个字符串为数组，例： listT = strSplit(strT, "\n")
-		"splitLines":       tk.SplitLines,             // 相当于strSplit(strT, "\n")
-		"startsWith":       tk.StartsWith,             // 判断字符串是否以某子串开头
-		"strStartsWith":    tk.StartsWith,             // 等同于startsWith
-		"endsWith":         tk.EndsWith,               // 判断字符串是否以某子串结尾
-		"strEndsWith":      tk.EndsWith,               // 等同于endsWith
-		"strIn":            tk.InStrings,              // 判断字符串是否在一个字符串列表中出现，函数定义： strIn(strA string, argsA ...string) bool，第一个可变参数如果以“-”开头，将表示参数开关，-it表示忽略大小写，并且trim再比较（strA并不trim）
-		"getNowStr":        tk.GetNowTimeStringFormal, // 获取一个表示当前时间的字符串，格式：2020-02-02 08:09:15
-		"getNowStrCompact": tk.GetNowTimeString,       // 获取一个简化的表示当前时间的字符串，格式：20200202080915
-		"genRandomStr":     tk.GenerateRandomString,   // 生成随机字符串，函数定义： (minCharA, maxCharA int, hasUpperA, hasLowerA, hasDigitA, hasSpecialCharA, hasSpaceA bool, hasInvalidChars bool) string
+		"trim":                 tk.Trim,                   // 取出字符串前后的空白字符
+		"strTrim":              tk.Trim,                   // 等同于trim
+		"trimSafely":           tk.TrimSafely,             // 取出字符串前后的空白字符，非字符串则返回默认值空，可以通过第二个（可选）参数设置默认值
+		"trimx":                tk.TrimSafely,             // 等同于trimSafely
+		"toLower":              strings.ToLower,           // 字符串转小写
+		"toUpper":              strings.ToUpper,           // 字符串转大写
+		"strContains":          strings.Contains,          // 判断字符串中是否包含某个字串
+		"strReplace":           tk.Replace,                // 替换字符串中的字串
+		"strReplaceIn":         tk.StringReplace,          // strReplaceIn("2020-02-02 08:09:15", "-", "", ":", "", " ", "")
+		"strJoin":              strJoin,                   // 连接一个字符串数组，以指定的分隔符，例： s = strJoin(listT, "\n")
+		"strSplit":             strings.Split,             // 拆分一个字符串为数组，例： listT = strSplit(strT, "\n")
+		"splitLines":           tk.SplitLines,             // 相当于strSplit(strT, "\n")
+		"startsWith":           tk.StartsWith,             // 判断字符串是否以某子串开头
+		"strStartsWith":        tk.StartsWith,             // 等同于startsWith
+		"endsWith":             tk.EndsWith,               // 判断字符串是否以某子串结尾
+		"strEndsWith":          tk.EndsWith,               // 等同于endsWith
+		"strIn":                tk.InStrings,              // 判断字符串是否在一个字符串列表中出现，函数定义： strIn(strA string, argsA ...string) bool，第一个可变参数如果以“-”开头，将表示参数开关，-it表示忽略大小写，并且trim再比较（strA并不trim）
+		"getNowStr":            tk.GetNowTimeStringFormal, // 获取一个表示当前时间的字符串，格式：2020-02-02 08:09:15
+		"getNowString":         tk.GetNowTimeStringFormal, // 等同于getNowStr
+		"getNowStrCompact":     tk.GetNowTimeString,       // 获取一个简化的表示当前时间的字符串，格式：20200202080915
+		"getNowStringCompact":  tk.GetNowTimeStringFormal, // 等同于getNowStringCompact
+		"genRandomStr":         tk.GenerateRandomString,   // 生成随机字符串，函数定义： (minCharA, maxCharA int, hasUpperA, hasLowerA, hasDigitA, hasSpecialCharA, hasSpaceA bool, hasInvalidChars bool) string
+		"generateRandomString": tk.GenerateRandomString,   // 生成随机字符串，函数定义： (minCharA, maxCharA int, hasUpperA, hasLowerA, hasDigitA, hasSpecialCharA, hasSpaceA bool, hasInvalidChars bool) string
 
 		// regex related 正则表达式相关
 		"regMatch":     tk.RegMatchX,          // 判断某字符串是否完整符合某表达式，例： if regMatch(mailT, `^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$`) {...}
@@ -1272,6 +1393,7 @@ func importQLNonGUIPackages() {
 		"newStringRing": tk.NewStringRing,                // 创建一个字符串环，大小固定，后进的会将先进的最后一个顶出来
 		"getCfgStr":     getCfgString,                    // 从根目录（Windows下为C:\，*nix下为/）的gox子目录中获取文件名为参数1的配置项字符串
 		"setCfgStr":     setCfgString,                    // 向根目录（Windows下为C:\，*nix下为/）的gox子目录中写入文件名为参数1，内容为参数2的配置项字符串，例：saveCfgStr("timeout", "30")
+		"genQR":         tk.GenerateQR,                   // 生成二维码，例：genQR("http://www.example.com", "-level=2"), level 0..3，越高容错性越好，但越大
 
 		// global variables 全局变量
 		"timeFormatG":        tk.TimeFormat,        // 用于时间处理时的时间格式，值为"2006-01-02 15:04:05"
