@@ -132,6 +132,8 @@ import (
 
 	qlgithub_topxeq_awsapi "github.com/topxeq/qlang/lib/github.com/topxeq/awsapi"
 
+	qlgithub_topxeq_charlang "github.com/topxeq/qlang/lib/github.com/topxeq/charlang"
+
 	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/godror/godror"
 
@@ -1581,6 +1583,9 @@ func importQLNonGUIPackages() {
 
 	qlang.Import("github_topxeq_awsapi", qlgithub_topxeq_awsapi.Exports)
 	qlang.Import("awsapi", qlgithub_topxeq_awsapi.Exports)
+
+	qlang.Import("github_topxeq_charlang", qlgithub_topxeq_charlang.Exports)
+	qlang.Import("charlang", qlgithub_topxeq_charlang.Exports)
 
 	qlang.Import("github_fogleman_gg", qlgithub_fogleman_gg.Exports)
 	qlang.Import("gg", qlgithub_fogleman_gg.Exports)
