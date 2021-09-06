@@ -4,9 +4,9 @@ go 1.16
 
 require (
 	github.com/beevik/etree v1.1.1-0.20200718192613-4a2f8b9d084c // indirect
-	github.com/denisenkom/go-mssqldb v0.0.0-20200428022330-06a60b6afbbc
-	github.com/go-sql-driver/mysql v1.5.0
-	github.com/godror/godror v0.15.0
+	github.com/denisenkom/go-mssqldb v0.10.0
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/godror/godror v0.25.3
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/topxeq/charlang v0.0.0
