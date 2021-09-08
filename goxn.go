@@ -579,6 +579,41 @@ func nilToEmpty(vA interface{}, argsA ...string) string {
 
 }
 
+func nilToEmptyOk(vA interface{}, argsA ...string) (string, bool) {
+
+	if vA == nil {
+		return "", true
+	}
+
+	if vA == spec.Undefined {
+		return "", false
+	}
+
+	if tk.IsNil(vA) {
+		return "", true
+	}
+
+	if (argsA != nil) && (len(argsA) > 0) {
+		vf, ok := vA.(float64)
+		if ok {
+			if tk.IfSwitchExistsWhole(argsA, "-nofloat") {
+				return tk.ToStr(int(vf)), true
+			} else {
+				return tk.Float64ToStr(vA.(float64)), true
+			}
+		}
+
+	}
+
+	rsT := fmt.Sprintf("%v", vA)
+
+	if tk.IfSwitchExistsWhole(argsA, "-trim") {
+		rsT = tk.Trim(rsT)
+	}
+
+	return rsT, true
+}
+
 func isValid(vA interface{}, argsA ...string) bool {
 
 	if vA == nil {
@@ -1215,20 +1250,21 @@ func importQLNonGUIPackages() {
 		"regSplit":        tk.RegSplitX,          // 根据正则表达式分割字符串（以符合条件的匹配来分割），函数定义： regSplit(strA, patternA string, nA ...int) []string
 
 		// conversion related 转换相关
-		"nilToEmpty":  nilToEmpty,                  // 将nil等值都转换为空字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim
-		"intToStr":    tk.IntToStrX,                // 整数转字符串
-		"strToInt":    tk.StrToIntWithDefaultValue, // 字符串转整数
-		"floatToStr":  tk.Float64ToStr,             // 浮点数转字符串
-		"strToFloat":  tk.StrToFloat64,             // 字符串转浮点数，如果第二个参数（可选）存在，则默认错误时返回该值，否则错误时返回-1
-		"timeToStr":   tk.FormatTime,               // 时间转字符串，函数定义: timeToStr(timeA time.Time, formatA ...string) string
-		"formatTime":  tk.FormatTime,               // 等同于timeToStr
-		"strToTime":   strToTime,                   // 字符串转时间
-		"bytesToData": tk.BytesToData,              // 字节数组转任意类型变量，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
-		"dataToBytes": tk.DataToBytes,              // 任意类型值转字节数组，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
-		"toStr":       tk.ToStr,                    // 任意值转字符串
-		"toInt":       tk.ToInt,                    // 任意值转整数
-		"toFloat":     tk.ToFloat,                  // 任意值转浮点数
-		"toByte":      tk.ToByte,                   // 任意值转字节
+		"nilToEmpty":   nilToEmpty,                  // 将nil等值都转换为空字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim
+		"nilToEmptyOk": nilToEmptyOk,                // 将nil等值都转换为空字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim，第二个返回值是bool类型，如果值是undefined，则返回false，其他情况为true
+		"intToStr":     tk.IntToStrX,                // 整数转字符串
+		"strToInt":     tk.StrToIntWithDefaultValue, // 字符串转整数
+		"floatToStr":   tk.Float64ToStr,             // 浮点数转字符串
+		"strToFloat":   tk.StrToFloat64,             // 字符串转浮点数，如果第二个参数（可选）存在，则默认错误时返回该值，否则错误时返回-1
+		"timeToStr":    tk.FormatTime,               // 时间转字符串，函数定义: timeToStr(timeA time.Time, formatA ...string) string
+		"formatTime":   tk.FormatTime,               // 等同于timeToStr
+		"strToTime":    strToTime,                   // 字符串转时间
+		"bytesToData":  tk.BytesToData,              // 字节数组转任意类型变量，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
+		"dataToBytes":  tk.DataToBytes,              // 任意类型值转字节数组，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
+		"toStr":        tk.ToStr,                    // 任意值转字符串
+		"toInt":        tk.ToInt,                    // 任意值转整数
+		"toFloat":      tk.ToFloat,                  // 任意值转浮点数
+		"toByte":       tk.ToByte,                   // 任意值转字节
 
 		"hexToBytes": tk.HexToBytes, // 将16进制字符串转换为字节数组([]byte)
 		"bytesToHex": tk.BytesToHex, // 将字节数组([]byte)转换为16进制字符串
@@ -1321,9 +1357,11 @@ func importQLNonGUIPackages() {
 		"fileExists":        tk.IfFileExists,                // 等同于ifFileExists
 		"joinPath":          filepath.Join,                  // 连接文件路径，等同于Go语言标准库中的path/filepath.Join
 		"getFileSize":       tk.GetFileSizeCompact,          // 获取文件大小
+		"getFileInfo":       tk.GetFileInfo,                 // 获取文件信息，返回map[string]string
 		"getFileList":       tk.GetFileList,                 // 获取指定目录下的符合条件的所有文件，例：listT = getFileList(pathT, "-recursive", "-pattern=*", "-exclusive=*.txt", "-withDir", "-verbose")
 		"createFile":        tk.CreateFile,                  // 等同于tk.CreateFile
 		"createTempFile":    tk.CreateTempFile,              // 等同于tk.CreateTempFile
+		"copyFile":          tk.CopyFile,                    // 等同于tk.CopyFile，可带参数-force和-bufferSize=100000
 		"removeFile":        tk.RemoveFile,                  // 等同于tk.RemoveFile
 		"renameFile":        tk.RenameFile,                  // 等同于tk.RenameFile
 		"loadText":          tk.LoadStringFromFile,          // 从文件中读取文本字符串，函数定义：func loadText(fileNameA string) string，出错时返回TXERROR:开头的字符串指明原因
@@ -1374,6 +1412,8 @@ func importQLNonGUIPackages() {
 		"formToMap":             tk.FormToMap,                     // 将HTTP请求中的form内容转换为map（字典/映射类型），例：mapT = formToMap(req.Form)
 		"generateJSONResponse":  tk.GenerateJSONPResponseWithMore, // 生成Web API服务器的JSON响应，支持JSONP，例：return generateJSONResponse("fail", sprintf("数据库操作失败：%v", errT), req)
 		"writeResp":             tk.WriteResponse,                 // 写http输出，函数原型writeResp(resA http.ResponseWriter, strA string) error
+		"writeRespHeader":       tk.WriteResponseHeader,           // 写http响应头，函数原型writeRespHeader(resA http.ResponseWriter, argsA ...interface{}) error
+		"setRespHeader":         tk.SetResponseHeader,             // 设置http响应头，函数原型setRespHeader(resA http.ResponseWriter, keyA string, valueA string) error
 		"replaceHtmlByMap":      tk.ReplaceHtmlByMap,
 		"cleanHtmlPlaceholders": tk.CleanHtmlPlaceholders,
 
