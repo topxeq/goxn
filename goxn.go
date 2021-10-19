@@ -1446,6 +1446,13 @@ func importQLNonGUIPackages() {
 		// }
 		// defer dbT.Close()
 
+		"dbClose": sqltk.CloseDBX, // 关闭数据库连接，例：
+		// errT := dbClose(dbT)
+		// 	if isError(rs) {
+		// 		fatalf("关闭数据库时发生错误：%v", rs)
+		// 	}
+		// }
+
 		"dbExec": sqltk.ExecDBX, // 进行数据库操作，例：
 		// rs := dbExec(dbT, `insert into table1 (field1,id,field2) values('value1',1,'value2')`
 		// 	if isError(rs) {
