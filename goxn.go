@@ -1571,6 +1571,7 @@ func importQLNonGUIPackages() {
 		"newCharAny":       charlang.NewAny,                 // create a interface{} pointer in charlang
 		"newCharAnyValue":  charlang.NewAnyValue,            // create a interface{} value in charlang
 		"toCharValue":      charlang.ConvertToObject,        // convert to a interface{} value in charlang
+		"wrapError":        tk.WrapError,                    //
 
 		// global variables 全局变量
 		"timeFormatG":        tk.TimeFormat,        // 用于时间处理时的时间格式，值为"2006-01-02 15:04:05"
