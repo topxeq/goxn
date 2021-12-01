@@ -143,7 +143,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "0.96a"
+var versionG = "0.97a"
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -1371,6 +1371,7 @@ func importQLNonGUIPackages() {
 		"jsonDecode":         tk.JSONToObject,         // JSON解码
 		"toJSON":             tk.ToJSONX,              // 增强的JSON编码，建议使用，函数定义： toJSON(objA interface{}, optsA ...string) string，参数optsA可选。例：s = toJSON(textA, "-indent", "-sort")
 		"fromJSON":           tk.FromJSONWithDefault,  // 增强的JSON解码，建议使用，函数定义： fromJSON(jsonA string, defaultA ...interface{}) interface{}
+		"getJSONNode":        tk.GetJSONNode,          // 获取JSON中的某个节点，未取到则返回nil，示例： getJSONNode("{\"ID\":1,\"Name\":\"Reds\",\"Colors\":[\"Crimson\",\"Red\",\"Ruby\",\"Maroon\"]}", "Colors", 0)
 		"simpleEncode":       tk.EncodeStringCustomEx, // 简单编码，主要为了文件名和网址名不含非法字符
 		"simpleDecode":       tk.DecodeStringCustom,   // 简单编码的解码，主要为了文件名和网址名不含非法字符
 		"tableToMSSArray":    tk.TableToMSSArray,      // 参见dbRecsToMapArray，主要用于处理数据库查询结果
