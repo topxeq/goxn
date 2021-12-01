@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 
 	"github.com/topxeq/goxn"
@@ -12,6 +13,7 @@ import (
 var muxG *http.ServeMux
 var portG = ":80"
 var basePathG = "."
+var webPathG = "."
 
 func doWms(res http.ResponseWriter, req *http.Request) {
 	if res != nil {
@@ -62,7 +64,7 @@ func doWms(res http.ResponseWriter, req *http.Request) {
 
 	toWriteT := ""
 
-	fcT := tk.LoadStringFromFile(filepath.Join(basePathG, "wms", reqT+".gox"))
+	fcT := tk.LoadStringFromFile(filepath.Join(basePathG, reqT+".gox"))
 	if tk.IsErrStr(fcT) {
 		res.Write([]byte(tk.ErrStrf("操作失败：%v", tk.GetErrStr(fcT))))
 		return
@@ -88,17 +90,58 @@ func doWms(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte(toWriteT))
 }
 
+var staticFS http.Handler = nil
+
+func serveStaticDirHandler(w http.ResponseWriter, r *http.Request) {
+	if staticFS == nil {
+		// tk.Pl("staticFS: %#v", staticFS)
+		// staticFS = http.StripPrefix("/w/", http.FileServer(http.Dir(filepath.Join(basePathG, "w"))))
+		hdl := http.FileServer(http.Dir(webPathG))
+		// tk.Pl("hdl: %#v", hdl)
+		staticFS = hdl
+	}
+
+	old := r.URL.Path
+
+	// tk.Pl("urlPath: %v", r.URL.Path)
+
+	name := filepath.Join(webPathG, path.Clean(old))
+
+	// tk.Pl("name: %v", name)
+
+	info, err := os.Lstat(name)
+	if err == nil {
+		if !info.IsDir() {
+			staticFS.ServeHTTP(w, r)
+			// http.ServeFile(w, r, name)
+		} else {
+			if tk.IfFileExists(filepath.Join(name, "index.html")) {
+				staticFS.ServeHTTP(w, r)
+			} else {
+				http.NotFound(w, r)
+			}
+		}
+	} else {
+		http.NotFound(w, r)
+	}
+
+}
+
 func main() {
 
 	portG = tk.GetSwitch(os.Args, "-port=", portG)
 	basePathG = tk.GetSwitch(os.Args, "-dir=", basePathG)
+	basePathG = tk.GetSwitch(os.Args, "-webDir=", basePathG)
 
 	muxG = http.NewServeMux()
 
 	muxG.HandleFunc("/wms/", doWms)
 	muxG.HandleFunc("/wms", doWms)
 
-	tk.PlNow("try starting server on %v（basePath: %v）...", portG, basePathG)
+	muxG.HandleFunc("/", serveStaticDirHandler)
+
+	tk.PlNow("goxn -port=%v -dir=%v -webDir=%v", portG, basePathG, webPathG)
+	tk.Pl("try starting server on %v ...", portG)
 
 	err := http.ListenAndServe(portG, muxG)
 
