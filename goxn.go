@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -170,6 +171,10 @@ func qlEval(strA string) string {
 }
 
 // native functions
+
+func getNowDateStrCompact() string {
+	return tk.GetNowTimeString()[0:8]
+}
 
 func isNil(vA interface{}) bool {
 	if vA == nil {
@@ -396,6 +401,24 @@ func leViewLine(idxA int) error {
 	}
 
 	tk.Pln(leBufG[idxA])
+
+	return nil
+}
+
+func leSort(descentA bool) error {
+	if leBufG == nil {
+		leClear()
+	}
+
+	if leBufG == nil {
+		return tk.Errf("buffer not initalized")
+	}
+
+	if descentA {
+		sort.Sort(sort.Reverse(sort.StringSlice(leBufG)))
+	} else {
+		sort.Sort(sort.StringSlice(leBufG))
+	}
 
 	return nil
 }
@@ -1278,6 +1301,7 @@ func importQLNonGUIPackages() {
 		"getNowString":         tk.GetNowTimeStringFormal, // 等同于getNowStr
 		"getNowStrCompact":     tk.GetNowTimeString,       // 获取一个简化的表示当前时间的字符串，格式：20200202080915
 		"getNowStringCompact":  tk.GetNowTimeStringFormal, // 等同于getNowStringCompact
+		"getNowDateStrCompact": getNowDateStrCompact,      // 获取一个简化的表示当前日期的字符串，格式：20210215
 		"genRandomStr":         tk.GenerateRandomStringX,  // 生成随机字符串，函数定义： genRandomStr("-min=6", "-max=8", "-noUpper", "-noLower", "-noDigit", "-special", "-space", "-invalid")
 		"generateRandomString": tk.GenerateRandomString,   // 生成随机字符串，函数定义： (minCharA, maxCharA int, hasUpperA, hasLowerA, hasDigitA, hasSpecialCharA, hasSpaceA bool, hasInvalidChars bool) string
 
@@ -1565,6 +1589,7 @@ func importQLNonGUIPackages() {
 		"leRemoveLines": leRemoveLines, // 删除行文本编辑器缓冲区中指定范围的多行，例：err = leRemoveLines(1, 3)
 		"leViewAll":     leViewAll,     // 查看行文本编辑器缓冲区中的所有内容，例：allText = leViewAll()
 		"leView":        leViewLine,    // 查看行文本编辑器缓冲区中的指定行，例：lineText = leView(18)
+		"leSort":        leSort,        // 将行文本编辑器缓冲区中的行进行排序，唯一参数表示是否降序排序，例：errT = leSort(true)
 
 		// GUI related start
 		// gui related 图形界面相关
