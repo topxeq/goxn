@@ -1286,6 +1286,7 @@ func importQLNonGUIPackages() {
 		"trimx":                tk.TrimSafely,             // 等同于trimSafely
 		"toLower":              strings.ToLower,           // 字符串转小写
 		"toUpper":              strings.ToUpper,           // 字符串转大写
+		"padStr":               tk.PadString,              // 字符串补零等填充操作，例如 s1 = padStr(s0, 5, "-fill=0", "-right=true")，第二个参数是要补齐到几位，默认填充字符串fill为字符串0，right（表示是否在右侧填充）为false，因此上例等同于padStr(s0, 5)，如果fill字符串不止一个字符，最终补齐数量不会多于第二个参数指定的值，但有可能少
 		"strContains":          strings.Contains,          // 判断字符串中是否包含某个字串
 		"strContainsIn":        tk.ContainsIn,             // 判断字符串中是否包含某几个字串
 		"strReplace":           tk.Replace,                // 替换字符串中的字串
@@ -1462,6 +1463,7 @@ func importQLNonGUIPackages() {
 		// outT, errT = clientT.Run(`ls -p; cat abc.txt`)
 		// errT = clientT.Upload(`./abc.txt`, strReplace(joinPath(pathT, `abc.txt`), `\`, "/"))
 		// errT = clientT.Download(`down.txt`, `./down.txt`)
+		// bytesT, errT = clientT.GetFileContent(`/root/test/down.txt`)
 		"mapToPostData": tk.MapToPostData,    // 从一个映射（map）对象生成进行POST请求的参数对象，函数定义func mapToPostData(postDataA map[string]string) url.Values
 		"getWebPage":    tk.DownloadPageUTF8, // 进行一个网络HTTP请求并获得服务器返回结果，或者下载一个网页，函数定义func getWebPage(urlA string, postDataA url.Values, customHeaders string, timeoutSecsA time.Duration, optsA ...string) string
 		// customHeadersA 是自定义请求头，内容是多行文本形如 charset: utf-8。如果冒号后还有冒号，要替换成`
