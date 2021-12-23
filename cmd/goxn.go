@@ -12,8 +12,10 @@ import (
 
 var muxG *http.ServeMux
 var portG = ":80"
+var sslPortG = ":443"
 var basePathG = "."
 var webPathG = "."
+var certPathG = "."
 
 func doWms(res http.ResponseWriter, req *http.Request) {
 	if res != nil {
@@ -127,11 +129,34 @@ func serveStaticDirHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func startHttpsServer(portA string) {
+	if !tk.StartsWith(portA, ":") {
+		portA = ":" + portA
+	}
+
+	err := http.ListenAndServeTLS(portA, filepath.Join(certPathG, "server.crt"), filepath.Join(certPathG, "server.key"), muxG)
+	if err != nil {
+		tk.PlNow("failed to start https: %v", err)
+	}
+
+}
+
 func main() {
 
 	portG = tk.GetSwitch(os.Args, "-port=", portG)
+	sslPortG = tk.GetSwitch(os.Args, "-sslPort=", sslPortG)
+
+	if !tk.StartsWith(portG, ":") {
+		portG = ":" + portG
+	}
+
+	if !tk.StartsWith(sslPortG, ":") {
+		sslPortG = ":" + sslPortG
+	}
+
 	basePathG = tk.GetSwitch(os.Args, "-dir=", basePathG)
-	basePathG = tk.GetSwitch(os.Args, "-webDir=", basePathG)
+	webPathG = tk.GetSwitch(os.Args, "-webDir=", basePathG)
+	certPathG = tk.GetSwitch(os.Args, "-certDir=", certPathG)
 
 	muxG = http.NewServeMux()
 
@@ -140,9 +165,14 @@ func main() {
 
 	muxG.HandleFunc("/", serveStaticDirHandler)
 
-	tk.PlNow("goxn -port=%v -dir=%v -webDir=%v", portG, basePathG, webPathG)
-	tk.Pl("try starting server on %v ...", portG)
+	tk.PlNow("goxn -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", portG, sslPortG, basePathG, webPathG, certPathG)
 
+	if sslPortG != "" {
+		tk.PlNow("try starting ssl server on %v...", sslPortG)
+		go startHttpsServer(sslPortG)
+	}
+
+	tk.Pl("try starting server on %v ...", portG)
 	err := http.ListenAndServe(portG, muxG)
 
 	if err != nil {
