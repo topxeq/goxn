@@ -174,6 +174,10 @@ func qlEval(strA string) string {
 
 // native functions
 
+func newStringBuilder() *strings.Builder {
+	return new(strings.Builder)
+}
+
 func fromJSONX(jsonA string) interface{} {
 	rsT, errT := tk.FromJSON(jsonA)
 
@@ -1320,12 +1324,15 @@ func importQLNonGUIPackages() {
 		"strJoin":              strJoin,                   // 连接一个字符串数组，以指定的分隔符，例： s = strJoin(listT, "\n")
 		"strSplit":             strings.Split,             // 拆分一个字符串为数组，例： listT = strSplit(strT, "\n")
 		"splitLines":           tk.SplitLines,             // 相当于strSplit(strT, "\n")
+		"strSplitLines":        tk.SplitLines,             // 相当于splitLines
 		"startsWith":           tk.StartsWith,             // 判断字符串是否以某子串开头
 		"strStartsWith":        tk.StartsWith,             // 等同于startsWith
 		"endsWith":             tk.EndsWith,               // 判断字符串是否以某子串结尾
 		"strEndsWith":          tk.EndsWith,               // 等同于endsWith
 		"strIn":                tk.InStrings,              // 判断字符串是否在一个字符串列表中出现，函数定义： strIn(strA string, argsA ...string) bool，第一个可变参数如果以“-”开头，将表示参数开关，-it表示忽略大小写，并且trim再比较（strA并不trim）
 		"strFindAll":           tk.FindSubStringAll,       // 寻找字符串中某个子串出现的所有位置，函数定义： func strFindAll(strA string, subStrA string) [][]int，每个匹配是两个整数，分别表示开头和结尾（不包含）
+		"newStringBuilder":     newStringBuilder,          // 新建一个strings.Builder对象
+		"newStringBuffer":      newStringBuilder,          // 同newStringBuilder
 		"getNowStr":            tk.GetNowTimeStringFormal, // 获取一个表示当前时间的字符串，格式：2020-02-02 08:09:15
 		"getNowString":         tk.GetNowTimeStringFormal, // 等同于getNowStr
 		"getNowStrCompact":     tk.GetNowTimeString,       // 获取一个简化的表示当前时间的字符串，格式：20200202080915
