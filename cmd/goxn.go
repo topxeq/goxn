@@ -16,7 +16,6 @@ var sslPortG = ":443"
 var basePathG = "."
 var webPathG = "."
 var certPathG = "."
-var versionG = "0.91a"
 
 func doWms(res http.ResponseWriter, req *http.Request) {
 	if res != nil {
@@ -169,7 +168,7 @@ func main() {
 
 	muxG.HandleFunc("/", serveStaticDirHandler)
 
-	tk.PlNow("goxn V%v -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", versionG, portG, sslPortG, basePathG, webPathG, certPathG)
+	tk.PlNow("goxn V%v -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", goxn.VersionG, portG, sslPortG, basePathG, webPathG, certPathG)
 
 	if sslPortG != "" {
 		tk.PlNow("try starting ssl server on %v...", sslPortG)

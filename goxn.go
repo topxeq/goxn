@@ -146,7 +146,8 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "0.97a"
+var versionG = "3.53a"
+var VersionG = versionG
 
 var notFoundG = interface{}(errors.New("not found"))
 
@@ -1254,6 +1255,7 @@ func importQLNonGUIPackages() {
 		"defined":         defined,               // 查看某变量是否已经定义，注意参数是字符串类型的变量名，例： if defined("a") {...}
 		"pass":            tk.Pass,               // 没有任何操作的函数，一般用于脚本结尾避免脚本返回一个结果导致输出乱了
 		"isDefined":       isDefined,             // 判断某变量是否已经定义，与defined的区别是传递的是变量名而不是字符串方式的变量，例： if isDefined(a) {...}
+		"isNil":           isNil,                 // 判断一个变量或表达式是否为nil
 		"isValid":         isValid,               // 判断某变量是否已经定义，并且不是nil，如果传入了第二个参数，还可以判断该变量是否类型是该类型，例： if isValid(a, "string") {...}
 		"isValidNotEmpty": isValidNotEmpty,       // 判断某变量是否已经定义，并且不是nil或空字符串，如果传入了第二个参数，还可以判断该变量是否类型是该类型，例： if isValid(a, "string") {...}
 		"eval":            qlEval,                // 运行一段Gox语言代码
@@ -1267,7 +1269,6 @@ func importQLNonGUIPackages() {
 		"getAddr":         tk.GetAddr,            // 用反射的方式获取一个变量的地址
 		"setVar":          tk.SetVar,             // 设置一个全局变量，例： setVar("a", "value of a")
 		"getVar":          tk.GetVar,             // 获取一个全局变量的值，例： v = getVar("a")
-		"isNil":           isNil,                 // 判断一个变量或表达式是否为nil
 		"ifThenElse":      tk.IfThenElse,         // 相当于三元操作符a?b:c
 		"ifElse":          tk.IfThenElse,         // 相当于ifThenElse
 		"ifThen":          tk.IfThenElse,         // 相当于ifThenElse
@@ -1354,22 +1355,23 @@ func importQLNonGUIPackages() {
 		"regSplit":        tk.RegSplitX,          // 根据正则表达式分割字符串（以符合条件的匹配来分割），函数定义： regSplit(strA, patternA string, nA ...int) []string
 
 		// conversion related 转换相关
-		"nilToEmpty":   nilToEmpty,                  // 将nil、error等值都转换为空字符串，其他的转换为字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim
-		"nilToEmptyOk": nilToEmptyOk,                // 将nil、error等值都转换为空字符串，其他的转换为字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim，第二个返回值是bool类型，如果值是undefined，则返回false，其他情况为true
-		"intToStr":     tk.IntToStrX,                // 整数转字符串
-		"strToInt":     tk.StrToIntWithDefaultValue, // 字符串转整数
-		"floatToStr":   tk.Float64ToStr,             // 浮点数转字符串
-		"strToFloat":   tk.StrToFloat64,             // 字符串转浮点数，如果第二个参数（可选）存在，则默认错误时返回该值，否则错误时返回-1
-		"timeToStr":    tk.FormatTime,               // 时间转字符串，函数定义: timeToStr(timeA time.Time, formatA ...string) string
-		"formatTime":   tk.FormatTime,               // 等同于timeToStr
-		"strToTime":    strToTime,                   // 字符串转时间
-		"toTime":       tk.ToTime,                   // 字符串或时间转时间
-		"bytesToData":  tk.BytesToData,              // 字节数组转任意类型变量，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
-		"dataToBytes":  tk.DataToBytes,              // 任意类型值转字节数组，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
-		"toStr":        tk.ToStr,                    // 任意值转字符串
-		"toInt":        tk.ToInt,                    // 任意值转整数
-		"toFloat":      tk.ToFloat,                  // 任意值转浮点数
-		"toByte":       tk.ToByte,                   // 任意值转字节
+		"nilToEmpty":      nilToEmpty,                     // 将nil、error等值都转换为空字符串，其他的转换为字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim
+		"nilToEmptyOk":    nilToEmptyOk,                   // 将nil、error等值都转换为空字符串，其他的转换为字符串, 加-nofloat参数将浮点数转换为整数，-trim参数将结果trim，第二个返回值是bool类型，如果值是undefined，则返回false，其他情况为true
+		"intToStr":        tk.IntToStrX,                   // 整数转字符串
+		"strToInt":        tk.StrToIntWithDefaultValue,    // 字符串转整数
+		"floatToStr":      tk.Float64ToStr,                // 浮点数转字符串
+		"strToFloat":      tk.StrToFloat64,                // 字符串转浮点数，如果第二个参数（可选）存在，则默认错误时返回该值，否则错误时返回-1
+		"timeToStr":       tk.FormatTime,                  // 时间转字符串，函数定义: timeToStr(timeA time.Time, formatA ...string) string，formatA可为"2006-01-02 15:04:05"（默认值）等字符串，为compact代表“20060102150405”
+		"timeStampToTime": tk.GetTimeFromUnixTimeStampMid, // Unix时间戳转时间（time.Time），支持10位和13位的时间戳，用法: timeT = timeToStr(timeStampToTime("1641139200"), "compact") ，得到20220103000000
+		"formatTime":      tk.FormatTime,                  // 等同于timeToStr
+		"strToTime":       strToTime,                      // 字符串转时间
+		"toTime":          tk.ToTime,                      // 字符串或时间转时间
+		"bytesToData":     tk.BytesToData,                 // 字节数组转任意类型变量，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
+		"dataToBytes":     tk.DataToBytes,                 // 任意类型值转字节数组，可选参数-endian=B或L指定使用BigEndian字节顺序还是LittleEndian
+		"toStr":           tk.ToStr,                       // 任意值转字符串
+		"toInt":           tk.ToInt,                       // 任意值转整数
+		"toFloat":         tk.ToFloat,                     // 任意值转浮点数
+		"toByte":          tk.ToByte,                      // 任意值转字节
 
 		"hexToBytes": tk.HexToBytes, // 将16进制字符串转换为字节数组([]byte)
 		"bytesToHex": tk.BytesToHex, // 将字节数组([]byte)转换为16进制字符串
@@ -1659,6 +1661,7 @@ func importQLNonGUIPackages() {
 		// GUI related end
 
 		// misc 杂项函数
+		"sortX":            tk.Sort,                         // 排序各种数据，用法：sort([{"f1": 1}, {"f1": 2}], "-key=f1", "-desc")
 		"newFunc":          NewFuncB,                        // 将Gox语言中的定义的函数转换为Go语言中类似 func f() 的形式
 		"newFuncIIE":       NewFuncInterfaceInterfaceErrorB, // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a interface{}) (interface{}, error) 的形式
 		"newFuncSSE":       NewFuncStringStringErrorB,       // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) (string, error) 的形式
