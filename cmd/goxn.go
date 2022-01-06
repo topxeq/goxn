@@ -16,6 +16,7 @@ var sslPortG = ":443"
 var basePathG = "."
 var webPathG = "."
 var certPathG = "."
+var versionG = "0.91a"
 
 func doWms(res http.ResponseWriter, req *http.Request) {
 	if res != nil {
@@ -79,7 +80,10 @@ func doWms(res http.ResponseWriter, req *http.Request) {
 
 	if errT != nil {
 		res.Header().Set("Content-Type", "text/html; charset=utf-8")
-		res.Write([]byte(tk.ErrStrf("操作失败", tk.GetErrStr(errT.Error()))))
+
+		errStrT := tk.ErrStrf("操作失败：%v", errT)
+		tk.Pln(errStrT)
+		res.Write([]byte(errStrT))
 		return
 	}
 
@@ -165,7 +169,7 @@ func main() {
 
 	muxG.HandleFunc("/", serveStaticDirHandler)
 
-	tk.PlNow("goxn -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", portG, sslPortG, basePathG, webPathG, certPathG)
+	tk.PlNow("goxn V%v -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", versionG, portG, sslPortG, basePathG, webPathG, certPathG)
 
 	if sslPortG != "" {
 		tk.PlNow("try starting ssl server on %v...", sslPortG)
