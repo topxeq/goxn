@@ -146,7 +146,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "3.58a"
+var versionG = "3.59a"
 var VersionG = versionG
 
 var notFoundG = interface{}(errors.New("not found"))
@@ -1433,6 +1433,8 @@ func importQLNonGUIPackages() {
 		"toInt":           tk.ToInt,                       // 任意值转整数
 		"toFloat":         tk.ToFloat,                     // 任意值转浮点数
 		"toByte":          tk.ToByte,                      // 任意值转字节
+		"toSimpleMap":     tk.SimpleMapToString,           // 将一个map（map[string]string或map[string]interface{}）转换为Simple Map字符串
+		"fromSimpleMap":   tk.LoadSimpleMapFromString,     // 将一个Simple Map字符串转换为map[string]string
 
 		"hexToBytes": tk.HexToBytes, // 将16进制字符串转换为字节数组([]byte)
 		"bytesToHex": tk.BytesToHex, // 将字节数组([]byte)转换为16进制字符串
