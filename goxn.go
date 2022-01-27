@@ -1466,7 +1466,8 @@ func importQLNonGUIPackages() {
 
 		// object related 对象有关
 
-		"newObject": tk.NewObject, // 新建一个对象，目前支持stack, list, arrayList等，用法：objT = newObject("stack")
+		"newObject": tk.NewObject, // 新建一个对象，目前支持stack, set(hashset), treeset, list(arraylist), linklist(linkedlist), tree(btree), stringBuffer(stringBuilder), bytesBuffer, error(err), errorString(errStr)等，用法：objT = newObject("stack")或objT = newObject("tree", 5)创建五层的btree树等
+		"newObj":    tk.NewObject, // 等同于newObject
 
 		// error related 错误处理相关
 		"isError":          tk.IsError,           // 判断表达式的值是否为error类型
