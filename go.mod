@@ -9,29 +9,29 @@ require (
 	github.com/godror/godror v0.25.3
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/topxeq/charlang v0.0.0
-	github.com/topxeq/qlang v0.0.0
-	github.com/topxeq/sqltk v0.0.0
-	github.com/topxeq/tk v0.0.0
+	github.com/topxeq/charlang v0.0.0-20220224014453-a505ad57cf4e
+	github.com/topxeq/qlang v0.0.0-20220224015111-4e1d7d54c09e
+	github.com/topxeq/sqltk v0.0.0-20220228051745-2503a98a4e47
+	github.com/topxeq/tk v1.0.0
 )
 
 // replace github.com/topxeq/tk v0.0.0 => ../tk
 
-replace github.com/360EntSecGroup-Skylar/excelize v1.4.1 => github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2
+// replace github.com/360EntSecGroup-Skylar/excelize v1.4.1 => github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2
 
-replace github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2 => github.com/360EntSecGroup-Skylar/excelize v1.4.1
+// replace github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2 => github.com/360EntSecGroup-Skylar/excelize v1.4.1
 
-replace github.com/topxeq/tk v0.0.0 => ../tk
+// replace github.com/topxeq/tk v0.0.0 => ../tk
 
-replace github.com/topxeq/xmlx v0.2.0 => ../xmlx
+// replace github.com/topxeq/xmlx v0.2.0 => ../xmlx
 
-replace github.com/topxeq/sqltk v0.0.0 => ../sqltk
+// replace github.com/topxeq/sqltk v0.0.0 => ../sqltk
 
-replace github.com/topxeq/qlang v0.0.0 => ../qlang
+// replace github.com/topxeq/qlang v0.0.0 => ../qlang
 
 // replace github.com/topxeq/text v0.0.0 => ../text
 
-replace github.com/topxeq/charlang v0.0.0 => ../charlang
+// replace github.com/topxeq/charlang v0.0.0 => ../charlang
 
 // replace github.com/topxeq/goph v0.0.0 => ../goph
 
