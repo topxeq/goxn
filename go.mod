@@ -6,7 +6,7 @@ require (
 	github.com/beevik/etree v1.1.1-0.20200718192613-4a2f8b9d084c // indirect
 	github.com/denisenkom/go-mssqldb v0.10.0
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/godror/godror v0.25.3
+	github.com/godror/godror v0.31.1-0.20220304150828-9df83c110931
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/topxeq/charlang v0.0.0-20220224014453-a505ad57cf4e
