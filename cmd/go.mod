@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/topxeq/goxn v0.0.0
-	github.com/topxeq/tk v1.0.0
+	github.com/topxeq/tk v1.0.1-0.20220307002337-1ee03d3d8831
 )
 
 // replace github.com/360EntSecGroup-Skylar/excelize v1.4.1 => github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2

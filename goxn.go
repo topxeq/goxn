@@ -146,7 +146,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "3.66a"
+var versionG = "v3.7.1"
 var VersionG = versionG
 
 var notFoundG = interface{}(errors.New("not found"))
