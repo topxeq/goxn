@@ -10,9 +10,9 @@ require (
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/topxeq/charlang v0.0.0-20220308001517-79d2b54a8942
-	github.com/topxeq/qlang v0.0.0-20220307002845-8a5031fe6e11
+	github.com/topxeq/qlang v0.0.0
 	github.com/topxeq/sqltk v0.0.0-20220228051745-2503a98a4e47
-	github.com/topxeq/tk v1.0.1-0.20220307002337-1ee03d3d8831
+	github.com/topxeq/tk v1.0.1
 )
 
 // replace github.com/topxeq/tk v0.0.0 => ../tk
@@ -21,13 +21,13 @@ require (
 
 // replace github.com/360EntSecGroup-Skylar/excelize/v2 v2.3.2 => github.com/360EntSecGroup-Skylar/excelize v1.4.1
 
-// replace github.com/topxeq/tk v0.0.0 => ../tk
+replace github.com/topxeq/tk v1.0.1 => ../tk
 
 // replace github.com/topxeq/xmlx v0.2.0 => ../xmlx
 
 // replace github.com/topxeq/sqltk v0.0.0 => ../sqltk
 
-// replace github.com/topxeq/qlang v0.0.0 => ../qlang
+replace github.com/topxeq/qlang v0.0.0 => ../qlang
 
 // replace github.com/topxeq/text v0.0.0 => ../text
 

@@ -146,7 +146,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "v3.7.1"
+var versionG = "v3.7.2"
 var VersionG = versionG
 
 var notFoundG = interface{}(errors.New("not found"))
@@ -1467,6 +1467,7 @@ func importQLNonGUIPackages() {
 		"strReplaceIn":         tk.StringReplace,          // strReplaceIn("2020-02-02 08:09:15", "-", "", ":", "", " ", "")
 		"strJoin":              strJoin,                   // 连接一个字符串数组，以指定的分隔符，例： s = strJoin(listT, "\n")
 		"strSplit":             strings.Split,             // 拆分一个字符串为数组，例： listT = strSplit(strT, "\n")
+		"strSplitByLen":        tk.SplitByLen,             // 按长度拆分一个字符串为数组，注意由于是rune，可能不是按字节长度，例： listT = strSplitByLen(strT, 10)，可以加第三个参数表示字节数不能超过多少
 		"splitLines":           tk.SplitLines,             // 相当于strSplit(strT, "\n")
 		"strSplitLines":        tk.SplitLines,             // 相当于splitLines
 		"startsWith":           tk.StartsWith,             // 判断字符串是否以某子串开头
