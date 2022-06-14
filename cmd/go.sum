@@ -226,7 +226,6 @@ github.com/topxeq/regexpx v0.0.0-20200814082553-4bffc7d07029/go.mod h1:UVq5N0KFj
 github.com/topxeq/socks v0.0.0-20200812112322-24acb126b5f3 h1:rK+vzRQ8z4If0mWMPuy25tSUdEbc5ngAbzknR+AF4j0=
 github.com/topxeq/socks v0.0.0-20200812112322-24acb126b5f3/go.mod h1:rxUzYlbHy6wU8ci0i5R1zs3YlgXqe5gDRwXwFLp2BqA=
 github.com/topxeq/sqltk v0.0.0-20220224013714-d9d64a06d59f/go.mod h1:qfnUkeG9fQMTXI+gBKHldZ3hihvSPpr0N/jGtejLuUo=
-github.com/topxeq/sqltk v0.0.0-20220228051745-2503a98a4e47 h1:iGnlQJ6ShlNT0b5H86zUXfxux6+LQrp8f41PPmlG58o=
 github.com/topxeq/sqltk v0.0.0-20220228051745-2503a98a4e47/go.mod h1:qfnUkeG9fQMTXI+gBKHldZ3hihvSPpr0N/jGtejLuUo=
 github.com/topxeq/text v0.0.0-20210710090213-e5fbc3508928 h1:yPsp6rNV6vy1pL0H3GGz99es8Uq/gziGEYxtSq3uChQ=
 github.com/topxeq/text v0.0.0-20210710090213-e5fbc3508928/go.mod h1:tYltUG1XxnVJvVhMpEV2YUzmcOU0HjYl4fK3nnNDKiM=
