@@ -8,7 +8,9 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
+	"gitee.com/topxeq/xie"
 	"github.com/topxeq/charlang"
 	"github.com/topxeq/qlang"
 	_ "github.com/topxeq/qlang/lib/builtin" // 导入 builtin 包
@@ -146,7 +148,7 @@ import (
 	"github.com/topxeq/tk"
 )
 
-var versionG = "v3.7.3"
+var versionG = "v3.7.7"
 var VersionG = versionG
 
 var notFoundG = interface{}(errors.New("not found"))
@@ -1660,6 +1662,10 @@ func importQLNonGUIPackages() {
 		"sleepMilliSeconds": tk.SleepMilliSeconds,            // 类似于sleep，但单位是毫秒
 		"sleepMS":           tk.SleepMilliSeconds,            // 等同于sleepMilliSeconds
 
+		// time related 时间相关
+
+		"now": time.Now, // 获取当前时间
+
 		// command-line 命令行处理相关
 		"getParameter":   tk.GetParameterByIndexWithDefaultValue, // 按顺序序号获取命令行参数，其中0代表第一个参数，也就是软件名称或者命令名称，1开始才是第一个参数，注意参数不包括开关，即类似-verbose=true这样的，函数定义：func getParameter(argsA []string, idxA int, defaultA string) string
 		"getParam":       tk.GetParam,                            // 类似于getParameter，只是后两个参数都是可选，默认是1和""（空字符串），且顺序随意
@@ -1850,6 +1856,7 @@ func importQLNonGUIPackages() {
 		"newChar":          charlang.NewChar,                // new a charlang script VM
 		"runChar":          charlang.RunChar,                // run a charlang script VM
 		"runCharCode":      charlang.RunCharCode,            // run a charlang script
+		"runXie":           xie.RunCode,                     // run a xielang script
 		"quickCompileChar": charlang.QuickCompile,           // compile a charlang script VM
 		"quickRunChar":     charlang.QuickRun,               // run a charlang script VM
 		"newCharAny":       charlang.NewAny,                 // create a interface{} pointer in charlang
