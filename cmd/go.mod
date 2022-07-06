@@ -3,7 +3,7 @@ module github.com/topxeq/goxn/goxn
 go 1.16
 
 require (
-	gitee.com/topxeq/xie v0.0.0 // indirect
+	gitee.com/topxeq/xie v0.0.0
 	github.com/topxeq/goxn v0.0.0
 	github.com/topxeq/tk v1.0.1
 )

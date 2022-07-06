@@ -8,6 +8,8 @@ import (
 
 	"github.com/topxeq/goxn"
 	"github.com/topxeq/tk"
+
+	"gitee.com/topxeq/xie"
 )
 
 var muxG *http.ServeMux
@@ -16,6 +18,7 @@ var sslPortG = ":443"
 var basePathG = "."
 var webPathG = "."
 var certPathG = "."
+var verboseG = false
 
 func doWms(res http.ResponseWriter, req *http.Request) {
 	if res != nil {
@@ -29,7 +32,9 @@ func doWms(res http.ResponseWriter, req *http.Request) {
 	}
 
 	reqT := tk.GetFormValueWithDefaultValue(req, "wms", "")
-	tk.Pl("RequestURI: %v", req.RequestURI)
+	if verboseG {
+		tk.Pl("RequestURI: %v", req.RequestURI)
+	}
 
 	if reqT == "" {
 		if tk.StartsWith(req.RequestURI, "/wms") {
@@ -62,11 +67,19 @@ func doWms(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	tk.Pl("[%v] REQ: %#v (%#v)", tk.GetNowTimeStringFormal(), reqT, paraMapT)
+	if verboseG {
+		tk.Pl("[%v] REQ: %#v (%#v)", tk.GetNowTimeStringFormal(), reqT, paraMapT)
+	}
 
 	toWriteT := ""
 
-	fcT := tk.LoadStringFromFile(filepath.Join(basePathG, reqT+".gox"))
+	fileNameT := reqT
+
+	if !tk.EndsWith(fileNameT, ".gox") {
+		fileNameT += ".gox"
+	}
+
+	fcT := tk.LoadStringFromFile(filepath.Join(basePathG, fileNameT))
 	if tk.IsErrStr(fcT) {
 		res.Write([]byte(tk.ErrStrf("操作失败：%v", tk.GetErrStr(fcT))))
 		return
@@ -93,6 +106,168 @@ func doWms(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	res.Write([]byte(toWriteT))
+}
+
+func replaceHtml(strA string, mapA map[string]string) string {
+	if mapA == nil {
+		return strA
+	}
+
+	for k, v := range mapA {
+		strA = tk.Replace(strA, "TX_"+k+"_XT", v)
+	}
+
+	return strA
+}
+
+func genFailCompact(titleA, msgA string, optsA ...string) string {
+	// mapT := map[string]string{
+	// 	"msgTitle":    titleA,
+	// 	"msg":         msgA,
+	// 	"subMsg":      "",
+	// 	"actionTitle": "返回",
+	// 	"actionHref":  "javascript:history.back();",
+	// }
+
+	// var fileNameT = "fail.html"
+
+	// if tk.IfSwitchExists(optsA, "-compact") {
+	// 	fileNameT = "failcompact.html"
+	// }
+
+	// tmplT := tk.LoadStringFromFile(filepath.Join(basePathG, "tmpl", fileNameT))
+
+	// tmplT = replaceHtml(tmplT, mapT)
+
+	tmplT := tk.ErrStrf("%v: %v", titleA, msgA)
+
+	return tmplT
+}
+
+// Xielang
+func doXms(res http.ResponseWriter, req *http.Request) {
+	if res != nil {
+		res.Header().Set("Access-Control-Allow-Origin", "*")
+		res.Header().Set("Access-Control-Allow-Headers", "*")
+		res.Header().Set("Content-Type", "text/html; charset=utf-8")
+	}
+
+	if req != nil {
+		req.ParseForm()
+	}
+
+	// tk.Pl("xms: %v", req)
+
+	reqT := tk.GetFormValueWithDefaultValue(req, "xms", "")
+
+	if reqT == "" {
+		if tk.StartsWith(req.RequestURI, "/xms") {
+			reqT = req.RequestURI[4:]
+		}
+	}
+
+	tmps := tk.Split(reqT, "?")
+	if len(tmps) > 1 {
+		reqT = tmps[0]
+	}
+
+	if tk.StartsWith(reqT, "/") {
+		reqT = reqT[1:]
+	}
+
+	// tk.Pl("charms: %v", reqT)
+
+	var paraMapT map[string]string
+	var errT error
+
+	vo := tk.GetFormValueWithDefaultValue(req, "vo", "")
+
+	if vo == "" {
+		paraMapT = tk.FormToMap(req.Form)
+	} else {
+		paraMapT, errT = tk.MSSFromJSON(vo)
+
+		if errT != nil {
+			res.Write([]byte(genFailCompact("action failed", "invalid vo format", "-compact")))
+			return
+		}
+	}
+
+	if verboseG {
+		tk.Pl("[%v] REQ: %#v (%#v)", tk.GetNowTimeStringFormal(), reqT, paraMapT)
+	}
+
+	toWriteT := ""
+
+	fileNameT := reqT
+
+	if !tk.EndsWith(fileNameT, ".xie") {
+		fileNameT += ".xie"
+	}
+
+	fcT := tk.LoadStringFromFile(filepath.Join(basePathG, fileNameT))
+	if tk.IsErrStr(fcT) {
+		res.Write([]byte(genFailCompact("action failed", tk.GetErrStr(fcT), "-compact")))
+		return
+	}
+
+	// envT := make(map[string]interface{})
+
+	// envT["argsG"] = paraMapT
+	// envT["requestG"] = req
+	// envT["responseG"] = res
+	// envT["reqNameG"] = reqT
+
+	vmT := xie.NewXie()
+
+	vmT.SetVar("argsG", paraMapT)
+	vmT.SetVar("requestG", req)
+	vmT.SetVar("responseG", res)
+	vmT.SetVar("reqNameG", reqT)
+	vmT.SetVar("basePathG", basePathG)
+
+	// vmT.SetVar("inputG", objA)
+
+	lrs := vmT.Load(fcT)
+
+	if tk.IsErrStr(lrs) {
+		res.Write([]byte(genFailCompact("action failed", tk.GetErrStr(lrs), "-compact")))
+		return
+	}
+
+	// var argsT []string = tk.JSONToStringArray(tk.GetSwitch(optsA, "-args=", "[]"))
+
+	// if argsT != nil {
+	// 	vmT.VarsM["argsG"] = argsT
+	// } else {
+	// 	vmT.VarsM["argsG"] = []string{}
+	// }
+
+	rs := vmT.Run()
+
+	if errT != nil {
+		res.Write([]byte(genFailCompact("action failed", errT.Error(), "-compact")))
+		return
+	}
+
+	if tk.IsErrStr(rs) {
+		res.Write([]byte(genFailCompact("action failed", tk.GetErrStr(rs), "-compact")))
+		return
+	}
+
+	toWriteT = rs
+
+	if toWriteT == "TX_END_RESPONSE_XT" {
+		return
+	}
+
+	res.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	res.Write([]byte(toWriteT))
+
+	// paraMapT["_reqHost"] = req.Host
+	// paraMapT["_reqInfo"] = fmt.Sprintf("%#v", req)
+
 }
 
 var staticFS http.Handler = nil
@@ -149,6 +324,8 @@ func main() {
 	portG = tk.GetSwitch(os.Args, "-port=", portG)
 	sslPortG = tk.GetSwitch(os.Args, "-sslPort=", sslPortG)
 
+	verboseG = tk.IfSwitchExistsWhole(os.Args, "-verbose")
+
 	if !tk.StartsWith(portG, ":") {
 		portG = ":" + portG
 	}
@@ -166,9 +343,12 @@ func main() {
 	muxG.HandleFunc("/wms/", doWms)
 	muxG.HandleFunc("/wms", doWms)
 
+	muxG.HandleFunc("/xms/", doXms)
+	muxG.HandleFunc("/xms", doXms)
+
 	muxG.HandleFunc("/", serveStaticDirHandler)
 
-	tk.PlNow("goxn V%v -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", goxn.VersionG, portG, sslPortG, basePathG, webPathG, certPathG)
+	tk.PlNow("goxn %v -port=%v -sslPort=%v -dir=%v -webDir=%v -certDir=%v", goxn.VersionG, portG, sslPortG, basePathG, webPathG, certPathG)
 
 	if sslPortG != "" {
 		tk.PlNow("try starting ssl server on %v...", sslPortG)
