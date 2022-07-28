@@ -10,7 +10,7 @@ require (
 	github.com/godror/godror v0.31.1-0.20220304150828-9df83c110931
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/topxeq/charlang v0.0.0-20220308001517-79d2b54a8942
+	github.com/topxeq/charlang v0.0.0-20220722003130-49bba2664ad6
 	github.com/topxeq/qlang v0.0.0
 	github.com/topxeq/sqltk v0.0.0
 	github.com/topxeq/tk v1.0.1
