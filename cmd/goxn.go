@@ -218,7 +218,7 @@ func doXms(res http.ResponseWriter, req *http.Request) {
 	// envT["responseG"] = res
 	// envT["reqNameG"] = reqT
 
-	vmT := xie.NewXie()
+	vmT := xie.NewXie(nil)
 
 	vmT.SetVar("argsG", paraMapT)
 	vmT.SetVar("requestG", req)
