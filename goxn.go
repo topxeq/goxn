@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"gitee.com/topxeq/xie"
 	"github.com/topxeq/charlang"
 	"github.com/topxeq/qlang"
 	_ "github.com/topxeq/qlang/lib/builtin" // 导入 builtin 包
 	_ "github.com/topxeq/qlang/lib/chan"
 	"github.com/topxeq/sqltk"
+	"github.com/topxeq/xie"
 
 	execq "github.com/topxeq/qlang/exec"
 	"github.com/topxeq/qlang/spec"
@@ -141,6 +141,7 @@ import (
 
 	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/godror/godror"
+	_ "github.com/sijms/go-ora/v2"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"

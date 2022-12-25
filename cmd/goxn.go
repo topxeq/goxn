@@ -9,7 +9,7 @@ import (
 	"github.com/topxeq/goxn"
 	"github.com/topxeq/tk"
 
-	"gitee.com/topxeq/xie"
+	"github.com/topxeq/xie"
 )
 
 var muxG *http.ServeMux
