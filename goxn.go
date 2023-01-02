@@ -1804,6 +1804,10 @@ func importQLNonGUIPackages() {
 		"sleepMilliSeconds": tk.SleepMilliSeconds,            // 类似于sleep，但单位是毫秒
 		"sleepMS":           tk.SleepMilliSeconds,            // 等同于sleepMilliSeconds
 
+		"getAppDir":    tk.GetApplicationPath,
+		"getCurDir":    tk.GetCurrentDir,
+		"getConfigDir": fnASRSE(tk.EnsureBasePath),
+
 		// time related 时间相关
 
 		"now": time.Now, // 获取当前时间
