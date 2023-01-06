@@ -352,6 +352,10 @@ func trim(vA interface{}, argsA ...string) string {
 	return tk.Trim(fmt.Sprintf("%v", vA), argsA...)
 }
 
+func newWebView2() {
+
+}
+
 func initGUI() {
 
 }
@@ -1179,6 +1183,54 @@ func NewFuncInterfaceInterfaceErrorB(funcA interface{}) func(interface{}) (inter
 	return f
 }
 
+func NewFuncInterfaceInterface(funcA interface{}) func(interface{}) interface{} {
+	funcT := (funcA).(*execq.Function)
+	f := func(s interface{}) interface{} {
+		r := funcT.Call(execq.NewStack(), s).([]interface{})
+
+		if len(r) < 1 {
+			return nil
+		}
+
+		return r[0].(interface{})
+	}
+
+	return f
+}
+
+func NewFuncInterfacesInterface(funcA interface{}) func(...interface{}) interface{} {
+	funcT := (funcA).(*execq.Function)
+	f := func(s ...interface{}) interface{} {
+		// tk.Pl("x2: %v", s)
+		r0 := funcT.Call(execq.NewStack(), s...)
+
+		r, ok := r0.([]interface{})
+
+		if ok {
+			if r == nil {
+				return nil
+			}
+
+			if len(r) < 1 {
+				return nil
+			}
+
+			rs, ok := r[0].(interface{})
+			if ok {
+				return rs
+			}
+
+			return nil
+
+		} else {
+			return r0
+		}
+
+	}
+
+	return f
+}
+
 func NewFuncStringStringErrorB(funcA interface{}) func(string) (string, error) {
 	funcT := (funcA).(*execq.Function)
 	f := func(s string) (string, error) {
@@ -1991,6 +2043,8 @@ func importQLNonGUIPackages() {
 		"selectFileGUI":       selectFileGUI,       // 图形化选取文件，例：fileName = selectFileGUI("-title=请选择文件……", "-filterName=所有文件", "-filter=*", "-start=.")，参数均为可选，start是默认起始目录
 		"selectDirectoryGUI":  selectDirectoryGUI,  // 图形化选取目录，例：dirName = selectDirectoryGUI("-title=请选择目录……", "-start=.")，参数均为可选，start是默认起始目录
 
+		"newWebView2": newWebView2, // 新建一个WebView2的窗口
+
 		// GUI related end
 
 		// misc related 杂项相关函数
@@ -1998,7 +2052,9 @@ func importQLNonGUIPackages() {
 
 		"sortX":            tk.SortX,                        // 排序各种数据，用法：sort([{"f1": 1}, {"f1": 2}], "-key=f1", "-desc")
 		"newFunc":          NewFuncB,                        // 将Gox语言中的定义的函数转换为Go语言中类似 func f() 的形式
+		"newFuncII":        NewFuncInterfaceInterface,       // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a interface{}) interface{} 的形式
 		"newFuncIIE":       NewFuncInterfaceInterfaceErrorB, // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a interface{}) (interface{}, error) 的形式
+		"newFuncIsI":       NewFuncInterfacesInterface,      // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a ...interface{}) interface{} 的形式
 		"newFuncSSE":       NewFuncStringStringErrorB,       // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) (string, error) 的形式
 		"newFuncSS":        NewFuncStringStringB,            // 将Gox语言中的定义的函数转换为Go语言中类似 func f(a string) string 的形式
 		"newCharFunc":      newCharFunc,                     // 将Gox语言中的定义的函数转换为Charlang语言中类似 func f() 的形式
