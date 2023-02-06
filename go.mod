@@ -4,12 +4,11 @@ go 1.16
 
 require (
 	github.com/beevik/etree v1.1.1-0.20200718192613-4a2f8b9d084c // indirect
-	github.com/denisenkom/go-mssqldb v0.10.0
-	github.com/go-sql-driver/mysql v1.6.0
-	github.com/godror/godror v0.31.1-0.20220304150828-9df83c110931
+	github.com/denisenkom/go-mssqldb v0.12.3
+	github.com/go-sql-driver/mysql v1.7.0
+	github.com/godror/godror v0.36.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
-	github.com/sijms/go-ora/v2 v2.5.20
-	github.com/stretchr/objx v0.3.0 // indirect
+	github.com/sijms/go-ora/v2 v2.5.25
 	github.com/topxeq/charlang v0.0.0-20220722003130-49bba2664ad6
 	github.com/topxeq/qlang v0.0.0
 	github.com/topxeq/sqltk v0.0.0-20221225082143-d6266faebd41

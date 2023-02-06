@@ -218,20 +218,20 @@ func doXms(res http.ResponseWriter, req *http.Request) {
 	// envT["responseG"] = res
 	// envT["reqNameG"] = reqT
 
-	vmT := xie.NewXie(nil)
+	vmT := xie.NewVMQuick()
 
-	vmT.SetVar("argsG", paraMapT)
-	vmT.SetVar("requestG", req)
-	vmT.SetVar("responseG", res)
-	vmT.SetVar("reqNameG", reqT)
-	vmT.SetVar("basePathG", basePathG)
+	vmT.SetVar(vmT.Running, "argsG", paraMapT)
+	vmT.SetVar(vmT.Running, "requestG", req)
+	vmT.SetVar(vmT.Running, "responseG", res)
+	vmT.SetVar(vmT.Running, "reqNameG", reqT)
+	vmT.SetVar(vmT.Running, "basePathG", basePathG)
 
 	// vmT.SetVar("inputG", objA)
 
-	lrs := vmT.Load(fcT)
+	lrs := vmT.Load(vmT.Running, fcT)
 
-	if tk.IsErrStr(lrs) {
-		res.Write([]byte(genFailCompact("action failed", tk.GetErrStr(lrs), "-compact")))
+	if tk.IsError(lrs) {
+		res.Write([]byte(genFailCompact("action failed", lrs.Error(), "-compact")))
 		return
 	}
 
@@ -250,12 +250,12 @@ func doXms(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if tk.IsErrStr(rs) {
-		res.Write([]byte(genFailCompact("action failed", tk.GetErrStr(rs), "-compact")))
+	if tk.IsErrX(rs) {
+		res.Write([]byte(genFailCompact("action failed", tk.GetErrStrX(rs), "-compact")))
 		return
 	}
 
-	toWriteT = rs
+	toWriteT = tk.ToStr(rs)
 
 	if toWriteT == "TX_END_RESPONSE_XT" {
 		return
