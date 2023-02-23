@@ -11,7 +11,7 @@ require (
 	github.com/sijms/go-ora/v2 v2.5.25
 	github.com/topxeq/charlang v0.0.0-20220722003130-49bba2664ad6
 	github.com/topxeq/qlang v0.0.0
-	github.com/topxeq/sqltk v0.0.0-20221225082143-d6266faebd41
+	github.com/topxeq/sqltk v0.0.0-20230223005953-f9932d23950c
 	github.com/topxeq/tk v1.0.1
 	github.com/topxeq/xie v0.0.0
 )

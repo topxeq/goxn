@@ -128,6 +128,7 @@ import (
 	qlgithub_topxeq_afero "github.com/topxeq/qlang/lib/github.com/topxeq/afero"
 
 	qlgithub_domodwyer_mailyak "github.com/topxeq/qlang/lib/github.com/domodwyer/mailyak"
+	qlgithub_topxeq_docxrepl "github.com/topxeq/qlang/lib/github.com/topxeq/docxrepl"
 
 	qlgithub_topxeq_socks "github.com/topxeq/qlang/lib/github.com/topxeq/socks"
 
@@ -2047,6 +2048,14 @@ func importQLNonGUIPackages() {
 
 		// GUI related end
 
+		// compress/uncompress related 压缩解压缩相关函数
+
+		"compress":   tk.Compress,
+		"uncompress": tk.Uncompress,
+
+		"compressText":   tk.CompressText,
+		"uncompressText": tk.UncompressText,
+
 		// misc related 杂项相关函数
 		"dealRef": tk.DealRef,
 
@@ -2226,6 +2235,8 @@ func importQLNonGUIPackages() {
 
 	qlang.Import("github_domodwyer_mailyak", qlgithub_domodwyer_mailyak.Exports)
 	qlang.Import("mailyak", qlgithub_domodwyer_mailyak.Exports)
+
+	qlang.Import("github_topxeq_docxrepl", qlgithub_topxeq_docxrepl.Exports)
 
 }
 
